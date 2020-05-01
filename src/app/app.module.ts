@@ -12,6 +12,10 @@ import {MaterialModule} from './material/material.module';
 import { ProjectMediaEditingComponent } from './components/project-media-editing/project-media-editing.component';
 import { MediaCardComponent } from './components/utils/media-card/media-card.component';
 import { SequenceCardComponent } from './components/utils/sequence-card/sequence-card.component';
+import { VideojsComponent } from './components/utils/videojs/videojs.component';
+import {VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule} from '@hitrecord/videogular2';
+
+
 
 @NgModule({
     declarations: [
@@ -20,7 +24,8 @@ import { SequenceCardComponent } from './components/utils/sequence-card/sequence
         Page404Component,
         ProjectMediaEditingComponent,
         MediaCardComponent,
-        SequenceCardComponent
+        SequenceCardComponent,
+        VideojsComponent
     ],
     imports: [
         BrowserModule,
@@ -28,7 +33,12 @@ import { SequenceCardComponent } from './components/utils/sequence-card/sequence
         BrowserAnimationsModule,
         FlexLayoutModule,
         MaterialModule,
-        HttpClientModule
+        HttpClientModule,
+        VgCoreModule,
+        VgControlsModule,
+        VgOverlayPlayModule,
+        VgBufferingModule,
+        VgStreamingModule
     ],
     providers: [],
     bootstrap: [AppComponent]
