@@ -12,4 +12,8 @@ export class ProjectMediaEditingComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+    tabEvent(tabIndex: number) {
+        console.log(tabIndex);
+    }
 }

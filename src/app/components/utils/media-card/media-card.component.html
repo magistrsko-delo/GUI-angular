@@ -1,0 +1,15 @@
+<mat-card style="margin-bottom: 0.5em">
+    <mat-card-content>
+        <div class="containerMedia">
+            <img class="containerMedia__image" src="https://mtdata.ru/u7/photo53A0/20946911428-0/original.jpg#20946911428">
+            <div class="containerMedia__text">
+                <mat-card-title>TITLE</mat-card-title>
+                <mat-card-subtitle>subtitle</mat-card-subtitle>
+            </div>
+            <div fxFlex=""></div>
+            <div *ngIf="!isSequenceMedia" fxLayoutAlign="center center">
+                <button mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

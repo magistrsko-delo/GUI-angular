@@ -1,1 +1,106 @@
-<p>project-media-editing works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+            <mat-toolbar>
+                <mat-toolbar-row>
+                    <span>PROJEKT</span>
+                </mat-toolbar-row>
+            </mat-toolbar>
+            <div>
+                VIDEO PLAYER
+            </div>
+        </div>
+        <div class="col-4">
+            <mat-tab-group (selectedIndexChange)="tabEvent($event)" mat-stretch-tabs>
+                <mat-tab label="ISKANJE">
+                    <ng-template matTabContent>
+                        <div>
+                            <mat-form-field class="fullwidth">
+                                <mat-label>izberi tiš medije</mat-label>
+                                <mat-select [value]="3">
+                                    <mat-option>None</mat-option>
+                                    <mat-option [value]="3">OBJAVLJENA</mat-option>
+                                    <mat-option [value]="1">PROCESIRANJE</mat-option>
+                                    <mat-option value="-1">VSA MEDIA</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div style="height: 600px; overflow: scroll;">
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                        </div>
+
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="PROJEKT">
+                    <ng-template matTabContent>
+                        <mat-toolbar style="height: 2em">Posnetki projekta</mat-toolbar>
+                        <div style="height: 300px; overflow-y: scroll;">
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                            <app-media-card></app-media-card>
+                        </div>
+
+                        <mat-toolbar style="height: 2em">
+                            Sekvence
+                            <div fxFlex=""></div>
+                            <button mat-raised-button color="primary">Dodaj</button>
+                        </mat-toolbar>
+                        <div style="height: 300px; overflow-y: scroll;">
+                            <app-sequence-card></app-sequence-card>
+                            <app-sequence-card></app-sequence-card>
+                            <app-sequence-card></app-sequence-card>
+                        </div>
+
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <mat-toolbar style="height: 3em">
+                Urejanje sekvece: IME SEKVENCE
+                <button mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
+                <div fxFlex></div>
+                <button mat-raised-button color="primary">OBJAVI</button>
+                <button mat-raised-button color="warn">IZBRIŠI</button>
+            </mat-toolbar>
+
+            <mat-card class="scrolling-wrapper-flexbox">
+                <div style="max-width: 25%" class="card">
+                    <app-media-card [isSequenceMedia]="true"></app-media-card>
+                </div>
+                <div style="max-width: 25%" class="card">
+                    <app-media-card [isSequenceMedia]="true"></app-media-card>
+                </div>
+                <div style="max-width: 25%" class="card">
+                    <app-media-card [isSequenceMedia]="true"></app-media-card>
+                </div>
+                <div style="max-width: 25%" class="card">
+                    <app-media-card [isSequenceMedia]="true"></app-media-card>
+                </div>
+                <div style="max-width: 25%" class="card">
+                    <app-media-card [isSequenceMedia]="true"></app-media-card>
+                </div>
+                <div style="vertical-align: middle; margin-top: 1em">
+                    <button mat-fab color="warn">
+                        <mat-icon>delete</mat-icon>
+                    </button><br>
+                    <button mat-fab color="primary" disabled>
+                        <mat-icon>plus_one</mat-icon>
+                    </button>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

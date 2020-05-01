@@ -9,3 +9,17 @@ body { margin: 0.5em; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .spacer {
     flex: 1 1 auto;
 }
+
+.containerMedia {
+    &__image {
+        display: inline-block;
+        vertical-align: top;
+        width: 35%;
+        height: 100px;
+    }
+    &__text {
+        display: inline-block;
+        width: 60%;
+        margin-left: 1em;
+    }
+}

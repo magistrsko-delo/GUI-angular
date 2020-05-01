@@ -10,13 +10,17 @@ import { ProjectListComponent } from './components/project-list/project-list.com
 import { Page404Component } from './components/page404/page404.component';
 import {MaterialModule} from './material/material.module';
 import { ProjectMediaEditingComponent } from './components/project-media-editing/project-media-editing.component';
+import { MediaCardComponent } from './components/utils/media-card/media-card.component';
+import { SequenceCardComponent } from './components/utils/sequence-card/sequence-card.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         ProjectListComponent,
         Page404Component,
-        ProjectMediaEditingComponent
+        ProjectMediaEditingComponent,
+        MediaCardComponent,
+        SequenceCardComponent
     ],
     imports: [
         BrowserModule,
