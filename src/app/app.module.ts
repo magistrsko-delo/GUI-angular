@@ -2,21 +2,20 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule } from '@hitrecord/videogular2';
 
 import { AppRoutingModule } from './app-routing.module';
+import { MaterialModule } from './material/material.module';
+import { PlayerModule } from './player/player.module';
+
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { Page404Component } from './components/page404/page404.component';
-import {MaterialModule} from './material/material.module';
 import { ProjectMediaEditingComponent } from './components/project-media-editing/project-media-editing.component';
 import { MediaCardComponent } from './components/utils/media-card/media-card.component';
 import { SequenceCardComponent } from './components/utils/sequence-card/sequence-card.component';
-import { VideojsComponent } from './components/utils/videojs/videojs.component';
-import {VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule} from '@hitrecord/videogular2';
-import {PlayerModule} from './player/player.module';
-
-
+import { MainComponent } from './components/main.component';
 
 @NgModule({
     declarations: [
@@ -26,7 +25,7 @@ import {PlayerModule} from './player/player.module';
         ProjectMediaEditingComponent,
         MediaCardComponent,
         SequenceCardComponent,
-        VideojsComponent
+        MainComponent
     ],
     imports: [
         BrowserModule,

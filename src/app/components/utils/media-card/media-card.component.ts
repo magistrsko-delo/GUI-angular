@@ -1,14 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-media-card',
     templateUrl: './media-card.component.html',
-    styleUrls: ['./media-card.component.scss']
+    styleUrls: ['./media-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaCardComponent implements OnInit {
     @Input() isSequenceMedia = false;
 
-    constructor() { }
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+    ) { }
 
     ngOnInit(): void {
     }

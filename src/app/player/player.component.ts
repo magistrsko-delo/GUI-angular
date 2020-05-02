@@ -1,4 +1,14 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    ViewChild
+} from '@angular/core';
 import {BitrateOption, VgAPI, VgHLS} from '@hitrecord/videogular2';
 
 export interface IMediaStream {
@@ -9,9 +19,10 @@ export interface IMediaStream {
 }
 
 @Component({
-  selector: 'app-player',
-  templateUrl: './player.component.html',
-  styleUrls: ['./player.component.scss']
+    selector: 'app-player',
+    templateUrl: './player.component.html',
+    styleUrls: ['./player.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlayerComponent implements OnInit {
 
@@ -22,7 +33,8 @@ export class PlayerComponent implements OnInit {
     currentStream: IMediaStream;
     constructor(
         private elementRef: ElementRef,
-        public renderer: Renderer2
+        public renderer: Renderer2,
+        private changeDetector: ChangeDetectorRef,
     ) { }
 
     // 'https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8'
@@ -45,7 +57,7 @@ export class PlayerComponent implements OnInit {
         this.vgHls.setBitrate(option);
     }
 
-    onClickStream(/*stream: IMediaStream*/) {
+    onClickStream() {
         console.log(this.api);
         this.api.pause();
         this.bitrates = null;
@@ -55,11 +67,13 @@ export class PlayerComponent implements OnInit {
             source: 'http://localhost:8006/v1/vod/26/master.m3u8',
             poster: 'https://i.imgur.com/3tU4Vig.jpg'
         };
+        this.changeDetector.markForCheck();
     }
 
     initBitRates($event: BitrateOption[]) {
         console.log($event);
         this.bitrates = $event;
+        this.changeDetector.markForCheck();
     }
 
     onTimeUpdate($event: any) {

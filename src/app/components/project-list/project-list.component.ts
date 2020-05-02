@@ -1,24 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {GraphQLService} from '../../services/graph-ql.service';
 import {GraphQLRequestModel} from '../../models/GraphQLRequest-model';
 import {ProjectModel} from '../../models/ProjectModel';
 import {environment} from '../../../environments/environment';
 import {Router} from '@angular/router';
+import {MainComponent} from '../main.component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-project-list',
     templateUrl: './project-list.component.html',
-    styleUrls: ['./project-list.component.scss']
+    styleUrls: ['./project-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent extends MainComponent implements OnInit {
 
     projectArray: Array<ProjectModel> = [];
     mediaManagerUrl: string = environment.mediaManagerUrl;
 
     constructor(
         private graphQLService: GraphQLService,
-        private router: Router
-    ) { }
+        private router: Router,
+        private changeDetector: ChangeDetectorRef,
+    ) {
+        super();
+    }
 
     ngOnInit(): void {
         this.getProjects();
@@ -27,6 +33,7 @@ export class ProjectListComponent implements OnInit {
     private getProjects(): void {
         const request: GraphQLRequestModel =  this.graphQLService.GetProjectDataRequest();
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
                 (rsp: any) => {
                     this.projectArray = rsp.projectsMetadata.map(project => new ProjectModel(project));
