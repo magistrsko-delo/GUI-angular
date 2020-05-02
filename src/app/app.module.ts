@@ -14,6 +14,7 @@ import { MediaCardComponent } from './components/utils/media-card/media-card.com
 import { SequenceCardComponent } from './components/utils/sequence-card/sequence-card.component';
 import { VideojsComponent } from './components/utils/videojs/videojs.component';
 import {VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule} from '@hitrecord/videogular2';
+import {PlayerModule} from './player/player.module';
 
 
 
@@ -34,6 +35,7 @@ import {VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, 
         FlexLayoutModule,
         MaterialModule,
         HttpClientModule,
+        PlayerModule,
         VgCoreModule,
         VgControlsModule,
         VgOverlayPlayModule,
