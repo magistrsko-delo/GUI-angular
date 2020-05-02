@@ -1,24 +1,4 @@
-<!-- class="video-js" -->
-<!--<video #target id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
-       controls preload="auto" width="640" height="264">
-    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-</video>-->
-
-<!--<video #target id="example_video_1" class="video-js vjs-default-skin vjs-big-play-centered"
-       controls preload="auto" width="640" height="264"
-       >
-    <source src="http://192.168.1.5:8006/v1/vod/28/1080p.m3u8" type="application/x-mpegURL">
-    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-</video>-->
-
-<!--<video #target style="width:50%; height:50%" controls id="video" muted="muted">
-    <source [src]="'http://localhost:8006/v1/vod/28/master.m3u8'" type="application/x-mpegURL">
-</video>-->
-
-<!--<video #target id="video-id" style="width:50%; height:50%" controls id="video" muted="muted">
-    <source src="https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8" type="application/x-mpegURL"/>
-</video>-->
-<vg-player>
+<vg-player style="max-width: 100%; max-height: 500px" (onPlayerReady)="onPlayerReady($event)">
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
 
@@ -30,23 +10,29 @@
     <vg-controls>
         <vg-play-pause></vg-play-pause>
         <vg-playback-button></vg-playback-button>
-
         <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-        <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
-
+        <vg-scrub-bar style="pointer-events: visible;"></vg-scrub-bar>
         <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
         <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+        <vg-quality-selector *ngIf="bitrates"
+                             (onBitrateChange)="setBitrate($event)"
+                             [bitrates]="bitrates">
+        </vg-quality-selector>
 
         <vg-track-selector></vg-track-selector>
         <vg-mute></vg-mute>
         <vg-volume></vg-volume>
-
         <vg-fullscreen></vg-fullscreen>
     </vg-controls>
 
-    <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin
-           [vgHls]="'http://192.168.1.5:8006/v1/vod/28/master.m3u8'"
+    <video [vgMedia]="media" #media
+           (onGetBitrates)="initBitRates($event) "
+           id="singleVideo" preload="none" crossorigin
+           [vgHls]="currentStream.source"
+           (timeupdate)="onTimeUpdate($event)"
+           [poster]="currentStream.poster"
+           style="max-width: 100%; max-height: 500px"
            type="application/x-mpegURL"
     >
     </video>
