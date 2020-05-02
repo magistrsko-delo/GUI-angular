@@ -6,11 +6,39 @@
                     <span>PROJEKT</span>
                 </mat-toolbar-row>
             </mat-toolbar>
+            <app-videojs>
+            </app-videojs>
+            <div class="row" style="margin-top: .5em">
+                <div class="col-6" style="margin-top: 1.5em">
+                    <div class="containerMedia">
+                        <img class="containerMedia__image" src="https://mtdata.ru/u7/photo53A0/20946911428-0/original.jpg#20946911428">
+                        <div class="containerMedia__text">
+                            <mat-card-title>TITLE video</mat-card-title>
+                            <mat-card-subtitle>subtitle: id itd.</mat-card-subtitle>
+                        </div>
+                        <div fxFlex=""></div>
+                        <div fxLayoutAlign="center">
+                            <button mat-raised-button color="primary">Zaslonski posnetek videa</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <button mat-raised-button color="primary" style="margin: 1em">IN</button>
+                        <mat-form-field appearance="fill" color="primary">
+                            <mat-label>Vstopna točka</mat-label>
+                            <input matInput type="number">
+                        </mat-form-field>
 
-            <div>
-                VIDEO PLAYER
-                <app-videojs>
-                </app-videojs>
+                        <button mat-raised-button color="primary" style="margin: 1em">OUT</button>
+                        <mat-form-field appearance="fill" color="primary">
+                            <mat-label>Izstopna točka</mat-label>
+                            <input matInput type="number">
+                        </mat-form-field>
+                    </div>
+
+                    <button class="fullwidth" mat-raised-button color="primary" style="margin: 1em">POREŽI VIDEO</button>
+                </div>
             </div>
         </div>
         <div class="col-4">
@@ -79,7 +107,7 @@
                 <button mat-raised-button color="warn">IZBRIŠI</button>
             </mat-toolbar>
 
-            <mat-card class="scrolling-wrapper-flexbox">
+            <div class="scrolling-wrapper-flexbox">
                 <div style="max-width: 25%" class="card">
                     <app-media-card [isSequenceMedia]="true"></app-media-card>
                 </div>
@@ -103,7 +131,7 @@
                         <mat-icon>plus_one</mat-icon>
                     </button>
                 </div>
-            </mat-card>
+            </div>
         </div>
     </div>
 </div>
