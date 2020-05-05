@@ -7,6 +7,7 @@ export class MediaModel extends Model{
     length?: number;
     thumbnail?: string;
     projectId?: number;
+    status: number;
     awsBucketWholeMedia?: string;
     awsStorageNameWholeMedia?: string;
     createdAt?: number;

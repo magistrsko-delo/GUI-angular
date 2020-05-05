@@ -32,14 +32,49 @@ export class GraphQLService {
         });
     }
 
+    public GetOneProjectDataRequest(projectId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'query {oneProjectMetadata(projectId: ' + projectId + '){' +
+                'projectId,' +
+                'name,' +
+                '}}'
+        });
+    }
+
     public SearchMediaStatus(status: number): GraphQLRequestModel {
         return new GraphQLRequestModel({
             query: 'query {searchMedias(status: ' + status + '){' +
                 'mediaId,' +
                 'name,' +
-                'siteName' +
-                'thumbnail' +
-                'projectId' +
+                'siteName,' +
+                'thumbnail,' +
+                'projectId,' +
+                'status,' +
+                '}}'
+        });
+    }
+
+    public GetProjectMedias(projectId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'query {searchMedias(projectId: ' + projectId + '){' +
+                'mediaId,' +
+                'name,' +
+                'siteName,' +
+                'thumbnail,' +
+                'projectId,' +
+                'status,' +
+                '}}'
+        });
+    }
+
+    public GetProjectSequences(projectId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'query {getProjectSequences(projectId: ' + projectId + '){' +
+                'sequenceId,' +
+                'name,' +
+                'projectId,' +
+                'thumbnail,' +
+                'status,' +
                 '}}'
         });
     }

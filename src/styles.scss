@@ -15,6 +15,8 @@ body { margin: 0.5em; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .containerMedia {
+    word-break: break-all;
+    word-wrap: break-word;
     &__image {
         display: inline-block;
         vertical-align: top;
