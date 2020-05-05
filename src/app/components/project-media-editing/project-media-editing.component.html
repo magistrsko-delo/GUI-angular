@@ -91,7 +91,7 @@
                         </mat-toolbar>
                         <div style="height: 300px; overflow-y: scroll;">
                             <ng-container *ngFor="let sequence of projectSequences">
-                                <app-sequence-card [sequence]="sequence"></app-sequence-card>
+                                <app-sequence-card (editSequenceEvent)="getCurrentSequenceMedias($event)" [sequence]="sequence"></app-sequence-card>
                             </ng-container>
                         </div>
 
@@ -102,30 +102,20 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" *ngIf="currentSequence">
             <mat-toolbar style="height: 3em">
-                Urejanje sekvece: IME SEKVENCE
-                <button mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
+                Urejanje sekvece: {{currentSequence.sequence.name}}
+                <i><small>sequenceId: {{currentSequence.sequence.sequenceId}}, status: {{currentSequence.sequence.status}}</small></i>
+                <button mat-mini-fab color="primary" style="margin-left: 1em;" (click)="playSeqeunce(currentSequence.sequence)"><mat-icon>play_arrow</mat-icon></button>
                 <div fxFlex></div>
                 <button mat-raised-button color="primary">OBJAVI</button>
                 <button mat-raised-button color="warn">IZBRIŠI</button>
             </mat-toolbar>
 
             <div class="scrolling-wrapper-flexbox">
-                <div style="max-width: 25%" class="card">
-                    <app-media-card [isSequenceMedia]="true"></app-media-card>
-                </div>
-                <div style="max-width: 25%" class="card">
-                    <app-media-card [isSequenceMedia]="true"></app-media-card>
-                </div>
-                <div style="max-width: 25%" class="card">
-                    <app-media-card [isSequenceMedia]="true"></app-media-card>
-                </div>
-                <div style="max-width: 25%" class="card">
-                    <app-media-card [isSequenceMedia]="true"></app-media-card>
-                </div>
-                <div style="max-width: 25%" class="card">
-                    <app-media-card [isSequenceMedia]="true"></app-media-card>
+
+                <div *ngFor="let media of currentSequence.Medias" style="max-width: 25%" class="card">
+                    <app-media-card [media]="media"  [isSequenceMedia]="true"></app-media-card>
                 </div>
                 <div style="vertical-align: middle; margin-top: 1em">
                     <button mat-fab color="warn">

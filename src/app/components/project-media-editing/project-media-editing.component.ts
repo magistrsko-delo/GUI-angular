@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {MainComponent} from '../main.component';
 import {GraphQLService} from '../../services/graph-ql.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GraphQLRequestModel} from '../../models/GraphQLRequest-model';
@@ -9,6 +8,7 @@ import {MediaModel} from '../../models/MediaModel';
 import {MatSelectChange} from '@angular/material/select';
 import {SequenceModel} from '../../models/SequenceModels';
 import {IMediaStream} from '../../models/IMediaStream';
+import {SequenceMediaModel} from '../../models/SequenceMediaModel';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -31,6 +31,9 @@ export class ProjectMediaEditingComponent implements OnInit {
     projectSequences: Array<SequenceModel>;
 
     currentMediaPlay: MediaModel;
+
+    // currnet sequence
+    currentSequence: SequenceMediaModel;
     constructor(
         private graphQLService: GraphQLService,
         private router: Router,
@@ -131,18 +134,42 @@ export class ProjectMediaEditingComponent implements OnInit {
             poster: this.currentMediaPlay.thumbnail && this.currentMediaPlay.thumbnail !== ''
                 ? this.mediaManagerUrl + this.currentMediaPlay.thumbnail + '?isImage=true' : '',
         });
-        console.log(this.currentStream);
+    }
+
+    playSeqeunce(sequence: SequenceModel) {
+        this.currentMediaPlay = null;
+        this.currentStream = new IMediaStream({
+            type: 'hls',
+            label: sequence.name,
+            source: this.hlsStreamUrl + 'v1/vod/sequence/' + sequence.sequenceId + '/1080p.m3u8',
+            poster: sequence.thumbnail && sequence.thumbnail !== ''
+                ? this.mediaManagerUrl + sequence.thumbnail + '?isImage=true' : '',
+        });
     }
 
     addInCutPoint() {
-        console.log('in: ', this.currentStreamTime);
         this.currentStreamInTime = this.currentStreamTime;
         this.changeDetector.markForCheck();
     }
 
     addOUtCutPoint() {
-        console.log('out: ', this.currentStreamTime);
         this.currentStreamOutTime = this.currentStreamTime;
         this.changeDetector.markForCheck();
+    }
+
+    getCurrentSequenceMedias(sequenceId: number) {
+        console.log('id: ', sequenceId);
+        const request: GraphQLRequestModel = this.graphQLService.GetSequenceMedias(sequenceId);
+        this.graphQLService.graphQLRequest(request)
+            .subscribe(
+                (rsp: any) => {
+                    this.currentSequence = new SequenceMediaModel(rsp.getSequenceMedias);
+                    console.log(this.currentSequence);
+                    this.changeDetector.markForCheck();
+                },
+                error => {
+                    console.log(error);
+                }
+            );
     }
 }

@@ -78,4 +78,13 @@ export class GraphQLService {
                 '}}'
         });
     }
+
+    public GetSequenceMedias(sequenceId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'query {getSequenceMedias(sequenceId:' + sequenceId + ')' +
+                '{sequence{sequenceId, name, status}, ' +
+                'Medias{mediaId, name, siteName, status, thumbnail, projectId} ' +
+                '}}'
+        });
+    }
 }
