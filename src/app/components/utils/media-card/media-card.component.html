@@ -9,7 +9,7 @@
             </div>
             <div fxFlex=""></div>
             <div *ngIf="!isSequenceMedia" fxLayoutAlign="center center">
-                <button mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
+                <button (click)="playMedia()" mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
             </div>
         </div>
     </mat-card-content>

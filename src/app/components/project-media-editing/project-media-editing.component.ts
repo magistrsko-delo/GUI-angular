@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {environment} from '../../../environments/environment';
 import {MainComponent} from '../main.component';
 import {GraphQLService} from '../../services/graph-ql.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -7,6 +8,7 @@ import {ProjectModel} from '../../models/ProjectModel';
 import {MediaModel} from '../../models/MediaModel';
 import {MatSelectChange} from '@angular/material/select';
 import {SequenceModel} from '../../models/SequenceModels';
+import {IMediaStream} from '../../models/IMediaStream';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -17,10 +19,18 @@ import {SequenceModel} from '../../models/SequenceModels';
 export class ProjectMediaEditingComponent implements OnInit {
     currentProjectId = -1;
     currentProject: ProjectModel;
+    mediaManagerUrl: string = environment.mediaManagerUrl;
+    hlsStreamUrl: string = environment.hlsStreamUrl;
+    currentStream: IMediaStream;
+    currentStreamTime: number; // in seconds
+    currentStreamInTime: number; // in seconds
+    currentStreamOutTime: number; // in seconds
 
     mediaSearchArray: Array<MediaModel>;
     projectMedias: Array<MediaModel>;
     projectSequences: Array<SequenceModel>;
+
+    currentMediaPlay: MediaModel;
     constructor(
         private graphQLService: GraphQLService,
         private router: Router,
@@ -110,5 +120,29 @@ export class ProjectMediaEditingComponent implements OnInit {
                     console.log(error);
                 }
             );
+    }
+
+    playOneMedia($event: MediaModel) {
+        this.currentMediaPlay = $event;
+        this.currentStream = new IMediaStream({
+            type: 'hls',
+            label: this.currentMediaPlay.name,
+            source: this.hlsStreamUrl + 'v1/vod/' + this.currentMediaPlay.mediaId + '/master.m3u8',
+            poster: this.currentMediaPlay.thumbnail && this.currentMediaPlay.thumbnail !== ''
+                ? this.mediaManagerUrl + this.currentMediaPlay.thumbnail + '?isImage=true' : '',
+        });
+        console.log(this.currentStream);
+    }
+
+    addInCutPoint() {
+        console.log('in: ', this.currentStreamTime);
+        this.currentStreamInTime = this.currentStreamTime;
+        this.changeDetector.markForCheck();
+    }
+
+    addOUtCutPoint() {
+        console.log('out: ', this.currentStreamTime);
+        this.currentStreamOutTime = this.currentStreamTime;
+        this.changeDetector.markForCheck();
     }
 }

@@ -6,37 +6,49 @@
                     <span *ngIf="currentProject">PROJEKT: {{currentProject.name}}</span>
                 </mat-toolbar-row>
             </mat-toolbar>
-            <app-player></app-player>
+            <app-player
+                [currentStream]="currentStream"
+                [(currentMediaTime)]="currentStreamTime"
+            ></app-player>
             <div class="row" style="margin-top: .5em">
                 <div class="col-6" style="margin-top: 1.5em">
-                    <div class="containerMedia">
-                        <img class="containerMedia__image" src="https://mtdata.ru/u7/photo53A0/20946911428-0/original.jpg#20946911428">
+                    <div *ngIf="currentMediaPlay" class="containerMedia">
+                        <img class="containerMedia__image" [src]=" currentMediaPlay.thumbnail && currentMediaPlay.thumbnail !== '' ? mediaManagerUrl + currentMediaPlay.thumbnail : ''">
                         <div class="containerMedia__text">
-                            <mat-card-title>TITLE video</mat-card-title>
-                            <mat-card-subtitle>subtitle: id itd.</mat-card-subtitle>
+                            <mat-card-title>{{currentMediaPlay.name}}</mat-card-title>
+                            <mat-card-subtitle>id: {{currentMediaPlay.mediaId}}, projectId: {{currentMediaPlay.projectId}}, status: {{currentMediaPlay.status}}</mat-card-subtitle>
+                            <mat-card-subtitle>siteName: {{currentMediaPlay.siteName}}</mat-card-subtitle>
                         </div>
                         <div fxFlex=""></div>
                         <div fxLayoutAlign="center">
-                            <button mat-raised-button color="primary">Zaslonski posnetek videa</button>
+                            <button mat-raised-button color="primary" style=" white-space: pre-wrap !important;"><mat-icon>add_a_photo</mat-icon></button>
                         </div>
                     </div>
                 </div>
                 <div class="col-6">
-                    <div>
-                        <button mat-raised-button color="primary" style="margin: 1em">IN</button>
-                        <mat-form-field appearance="fill" color="primary">
-                            <mat-label>Vstopna točka</mat-label>
-                            <input matInput type="number">
-                        </mat-form-field>
+                    <div *ngIf="currentMediaPlay">
+                        <div style="width: 30%; display: inline">
+                            <button (click)="addInCutPoint()" mat-raised-button color="primary" style="margin: 1em">IN</button>
+                            <mat-form-field appearance="fill" color="primary">
+                                <mat-label>Vstopna točka</mat-label>
+                                <label>
+                                    <input matInput  type="text"  [(ngModel)]="currentStreamInTime" required >
+                                </label>
+                            </mat-form-field>
+                        </div>
 
-                        <button mat-raised-button color="primary" style="margin: 1em">OUT</button>
-                        <mat-form-field appearance="fill" color="primary">
-                            <mat-label>Izstopna točka</mat-label>
-                            <input matInput type="number">
-                        </mat-form-field>
+                        <div style="width: 30%; display: inline">
+                            <button (click)="addOUtCutPoint()" mat-raised-button color="primary" style="margin: 1em">OUT</button>
+                            <mat-form-field  appearance="fill" color="primary">
+                                <mat-label>Izstopna točka</mat-label>
+                                <label>
+                                    <input matInput  type="text"  [(ngModel)]="currentStreamOutTime" required >
+                                </label>
+                            </mat-form-field>
+                        </div>
                     </div>
 
-                    <button class="fullwidth" mat-raised-button color="primary" style="margin: 1em">POREŽI VIDEO</button>
+                    <button *ngIf="currentMediaPlay" class="fullwidth" mat-raised-button color="primary" style="margin: 1em">POREŽI VIDEO</button>
                 </div>
             </div>
         </div>
@@ -57,7 +69,7 @@
 
                         <div style="height: 600px; overflow: scroll;">
                             <ng-container *ngFor="let media of mediaSearchArray">
-                                <app-media-card [media]="media"></app-media-card>
+                                <app-media-card (mediaForPlayEvent)="playOneMedia($event)" [media]="media"></app-media-card>
                             </ng-container>
                         </div>
 
@@ -68,7 +80,7 @@
                         <mat-toolbar style="height: 2em">Posnetki projekta</mat-toolbar>
                         <div style="height: 300px; overflow-y: scroll;">
                             <ng-container *ngFor="let media of projectMedias">
-                                <app-media-card [media]="media"></app-media-card>
+                                <app-media-card (mediaForPlayEvent)="playOneMedia($event)" [media]="media"></app-media-card>
                             </ng-container>
                         </div>
 

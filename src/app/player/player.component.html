@@ -1,4 +1,6 @@
-<vg-player style="max-width: 100%; max-height: 500px" (onPlayerReady)="onPlayerReady($event)">
+<vg-player style="max-width: 100%; max-height: 500px"
+           (onPlayerReady)="onPlayerReady($event)"
+>
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
 
@@ -25,14 +27,16 @@
         <vg-volume></vg-volume>
         <vg-fullscreen></vg-fullscreen>
     </vg-controls>
-
     <video [vgMedia]="media" #media
-           (onGetBitrates)="initBitRates($event) "
-           id="singleVideo" preload="none" crossorigin
-           [vgHls]="currentStream.source"
-           (timeupdate)="onTimeUpdate($event)"
-           [poster]="currentStream.poster"
+           (onGetBitrates)="currentStream ? initBitRates($event): null "
+           id="singleVideo"
+           [vgHls]="currentStream ? currentStream.source: ''"
+           (timeupdate)="currentStream ? onTimeUpdate($event): null"
+           [poster]="currentStream ? currentStream.poster: ''"
            style="max-width: 100%; max-height: 500px"
+           crossOrigin
+           preload="auto"
+           autoplay
            type="application/x-mpegURL"
     >
     </video>

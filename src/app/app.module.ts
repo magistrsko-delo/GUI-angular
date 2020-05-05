@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule } from '@hitrecord/videogular2';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -34,12 +35,13 @@ import { MainComponent } from './components/main.component';
         FlexLayoutModule,
         MaterialModule,
         HttpClientModule,
+        FormsModule,
         PlayerModule,
-        VgCoreModule,
+        /*VgCoreModule,
         VgControlsModule,
         VgOverlayPlayModule,
         VgBufferingModule,
-        VgStreamingModule
+        VgStreamingModule*/
     ],
     providers: [],
     bootstrap: [AppComponent]

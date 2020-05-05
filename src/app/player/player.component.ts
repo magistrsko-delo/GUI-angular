@@ -2,21 +2,14 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
-    Input,
-    OnDestroy,
-    OnInit,
-    Renderer2,
+    ElementRef, EventEmitter,
+    Input, OnChanges,
+    OnInit, Output,
+    SimpleChanges,
     ViewChild
 } from '@angular/core';
 import {BitrateOption, VgAPI, VgHLS} from '@hitrecord/videogular2';
-
-export interface IMediaStream {
-    type: 'hls';
-    source: string;
-    label: string;
-    poster: string;
-}
+import {IMediaStream} from '../models/IMediaStream';
 
 @Component({
     selector: 'app-player',
@@ -24,60 +17,50 @@ export interface IMediaStream {
     styleUrls: ['./player.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnChanges {
 
     @ViewChild(VgHLS) vgHls: VgHLS;
+    @Input() currentStream: IMediaStream;
+    @Input() currentMediaTime: number;
+    @Output() currentMediaTimeChange = new EventEmitter<number>();
 
     api: VgAPI;
     bitrates: BitrateOption[];
-    currentStream: IMediaStream;
+
     constructor(
         private elementRef: ElementRef,
-        public renderer: Renderer2,
         private changeDetector: ChangeDetectorRef,
     ) { }
-
-    // 'https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8'
     ngOnInit() {
-        this.currentStream = {
-            type: 'hls',
-            label: 'HLS streaming',
-            source: 'http://192.168.1.8:8006/v1/vod/38/master.m3u8',
-            poster: 'https://i.imgur.com/fHyEMsl.jpg',
-        };
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (this.api && changes.currentStream) {
+            this.api.pause();
+            this.bitrates = null;
+            this.currentStream = changes.currentStream.currentValue;
+            this.api.getDefaultMedia().currentTime = 0;
+            this.changeDetector.markForCheck();
+        }
     }
 
     onPlayerReady(api: VgAPI) {
         this.api = api;
-        console.log(this.api);
     }
 
     setBitrate(option: BitrateOption) {
-        console.log(option);
         this.vgHls.setBitrate(option);
     }
 
-    onClickStream() {
-        console.log(this.api);
-        this.api.pause();
-        this.bitrates = null;
-        this.currentStream = {
-            type: 'hls',
-            label: 'HLS streaming',
-            source: 'http://localhost:8006/v1/vod/26/master.m3u8',
-            poster: 'https://i.imgur.com/3tU4Vig.jpg'
-        };
-        this.changeDetector.markForCheck();
-    }
-
     initBitRates($event: BitrateOption[]) {
-        console.log($event);
         this.bitrates = $event;
         this.changeDetector.markForCheck();
     }
 
     onTimeUpdate($event: any) {
-        console.log($event.target.currentTime);
+        if ($event.target.currentTime) {
+            this.currentMediaTimeChange.emit($event.target.currentTime);
+        }
     }
 
 }
