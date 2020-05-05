@@ -31,4 +31,16 @@ export class GraphQLService {
                 '}}'
         });
     }
+
+    public SearchMediaStatus(status: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'query {searchMedias(status: ' + status + '){' +
+                'mediaId,' +
+                'name,' +
+                'siteName' +
+                'thumbnail' +
+                'projectId' +
+                '}}'
+        });
+    }
 }

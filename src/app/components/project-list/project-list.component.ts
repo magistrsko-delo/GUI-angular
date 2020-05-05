@@ -13,7 +13,7 @@ import {takeUntil} from 'rxjs/operators';
     styleUrls: ['./project-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectListComponent extends MainComponent implements OnInit {
+export class ProjectListComponent implements OnInit {
 
     projectArray: Array<ProjectModel> = [];
     mediaManagerUrl: string = environment.mediaManagerUrl;
@@ -23,7 +23,7 @@ export class ProjectListComponent extends MainComponent implements OnInit {
         private router: Router,
         private changeDetector: ChangeDetectorRef,
     ) {
-        super();
+        // super();
     }
 
     ngOnInit(): void {
@@ -32,11 +32,12 @@ export class ProjectListComponent extends MainComponent implements OnInit {
 
     private getProjects(): void {
         const request: GraphQLRequestModel =  this.graphQLService.GetProjectDataRequest();
+        console.log(request);
         this.graphQLService.graphQLRequest(request)
-            .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
                 (rsp: any) => {
                     this.projectArray = rsp.projectsMetadata.map(project => new ProjectModel(project));
+                    this.changeDetector.markForCheck();
                 },
                 error => {
                     console.log('in eror: ', error);

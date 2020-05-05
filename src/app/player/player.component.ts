@@ -42,7 +42,7 @@ export class PlayerComponent implements OnInit {
         this.currentStream = {
             type: 'hls',
             label: 'HLS streaming',
-            source: 'http://localhost:8006/v1/vod/27/master.m3u8',
+            source: 'http://192.168.1.8:8006/v1/vod/38/master.m3u8',
             poster: 'https://i.imgur.com/fHyEMsl.jpg',
         };
     }
