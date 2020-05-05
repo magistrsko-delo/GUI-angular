@@ -1,4 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {SequenceModel} from '../../../models/SequenceModels';
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'app-sequence-card',
@@ -7,7 +9,8 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SequenceCardComponent implements OnInit {
-
+    @Input() sequence: SequenceModel;
+    mediaManagerUrl: string = environment.mediaManagerUrl;
     constructor(
         private changeDetector: ChangeDetectorRef,
     ) { }

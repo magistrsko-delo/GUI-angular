@@ -3,7 +3,7 @@
         <div class="col-8">
             <mat-toolbar>
                 <mat-toolbar-row>
-                    <span>PROJEKT</span>
+                    <span *ngIf="currentProject">PROJEKT: {{currentProject.name}}</span>
                 </mat-toolbar-row>
             </mat-toolbar>
             <app-player></app-player>
@@ -47,22 +47,18 @@
                         <div>
                             <mat-form-field class="fullwidth">
                                 <mat-label>izberi tiš medije</mat-label>
-                                <mat-select [value]="3">
-                                    <mat-option>None</mat-option>
+                                <mat-select [value]="3" (selectionChange)="searchNewMedia($event)">
                                     <mat-option [value]="3">OBJAVLJENA</mat-option>
                                     <mat-option [value]="1">PROCESIRANJE</mat-option>
-                                    <mat-option value="-1">VSA MEDIA</mat-option>
+                                    <mat-option [value]="-1">VSA MEDIA</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
 
                         <div style="height: 600px; overflow: scroll;">
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
+                            <ng-container *ngFor="let media of mediaSearchArray">
+                                <app-media-card [media]="media"></app-media-card>
+                            </ng-container>
                         </div>
 
                     </ng-template>
@@ -71,12 +67,9 @@
                     <ng-template matTabContent>
                         <mat-toolbar style="height: 2em">Posnetki projekta</mat-toolbar>
                         <div style="height: 300px; overflow-y: scroll;">
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
-                            <app-media-card></app-media-card>
+                            <ng-container *ngFor="let media of projectMedias">
+                                <app-media-card [media]="media"></app-media-card>
+                            </ng-container>
                         </div>
 
                         <mat-toolbar style="height: 2em">
@@ -85,9 +78,9 @@
                             <button mat-raised-button color="primary">Dodaj</button>
                         </mat-toolbar>
                         <div style="height: 300px; overflow-y: scroll;">
-                            <app-sequence-card></app-sequence-card>
-                            <app-sequence-card></app-sequence-card>
-                            <app-sequence-card></app-sequence-card>
+                            <ng-container *ngFor="let sequence of projectSequences">
+                                <app-sequence-card [sequence]="sequence"></app-sequence-card>
+                            </ng-container>
                         </div>
 
                     </ng-template>

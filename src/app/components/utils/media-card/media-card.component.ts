@@ -1,4 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {MediaModel} from '../../../models/MediaModel';
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'app-media-card',
@@ -8,7 +10,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} fr
 })
 export class MediaCardComponent implements OnInit {
     @Input() isSequenceMedia = false;
+    @Input() media: MediaModel;
 
+    mediaManagerUrl: string = environment.mediaManagerUrl;
     constructor(
         private changeDetector: ChangeDetectorRef,
     ) { }

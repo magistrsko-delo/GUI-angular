@@ -1,11 +1,12 @@
-<mat-card style="margin-bottom: 0.5em">
+<mat-card *ngIf="sequence" style="margin-bottom: 0.5em">
     <mat-card-content>
         <div class="containerMedia">
-            <img class="containerMedia__image" src="https://material.angular.io/assets/img/examples/shiba2.jpg">
+            <img class="containerMedia__image" [src]=" sequence.thumbnail && sequence.thumbnail !== '' ? mediaManagerUrl + sequence.thumbnail : ''">
             <div class="containerMedia__text">
                 <div>
-                    <mat-card-title>TITLE</mat-card-title>
-                    <mat-card-subtitle>data</mat-card-subtitle>
+                    <mat-card-title>{{sequence.name}}</mat-card-title>
+                    <mat-card-subtitle>sequenceId: {{sequence.sequenceId}}, projectId: {{sequence.projectId}}</mat-card-subtitle>
+                    <mat-card-subtitle>status: {{sequence.status}}</mat-card-subtitle>
                 </div>
             </div>
             <div fxFlex></div>
