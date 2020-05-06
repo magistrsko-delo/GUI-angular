@@ -57,12 +57,10 @@ export class ProjectListComponent implements OnInit {
             data: 'Želite izbrisati projekt?'
         }).afterClosed().subscribe(result => {
             if (result) {
-                console.log('potrjeno brisanje projekta');
                 const request: GraphQLRequestModel = this.graphQLService.DeleteProjectMutation(project.projectId);
                 this.graphQLService.graphQLRequest(request)
                     .subscribe(
                         (rsp: any) => {
-                            console.log(rsp.deleteProject);
                             this.projectArray = rsp.deleteProject.map(project1 => new ProjectModel(project1));
                             console.error('DELETE FOR PROJECT CURRENTLY UNAVAILABLE');
                             this.changeDetector.markForCheck();

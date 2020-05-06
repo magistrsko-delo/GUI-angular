@@ -1,14 +1,14 @@
 <mat-card *ngIf="media" style="margin-bottom: 0.5em">
     <mat-card-content>
         <div class="containerMedia">
-            <img class="containerMedia__image" [src]=" media.thumbnail && media.thumbnail !== '' ? mediaManagerUrl + media.thumbnail : ''">
+            <img style="cursor: alias" class="containerMedia__image" [src]=" media.thumbnail && media.thumbnail !== '' ? mediaManagerUrl + media.thumbnail : ''">
             <div class="containerMedia__text">
                 <mat-card-title>{{media.name}}</mat-card-title>
                 <mat-card-subtitle>id: {{media.mediaId}}, projectId: {{media.projectId}}, status: {{media.status}} </mat-card-subtitle>
                 <mat-card-subtitle>siteName: {{media.siteName}}</mat-card-subtitle>
             </div>
             <div fxFlex=""></div>
-            <div *ngIf="!isSequenceMedia" fxLayoutAlign="center center">
+            <div *ngIf="!isSequenceMedia && media.status === 3" fxLayoutAlign="center center">
                 <button (click)="playMedia()" mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
             </div>
         </div>

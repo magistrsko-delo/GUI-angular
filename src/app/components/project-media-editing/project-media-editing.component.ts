@@ -14,6 +14,7 @@ import {DragDropService} from '../../services/drag-drop.service';
 import {MatDialog} from '@angular/material/dialog';
 import {MediaEditComponent} from '../modal/media-edit/media-edit.component';
 import {SequenceComponent} from '../modal/sequence/sequence.component';
+import {ConfirmComponent} from '../modal/confirm/confirm.component';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -26,7 +27,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     currentProject: ProjectModel;
     mediaManagerUrl: string = environment.mediaManagerUrl;
     hlsStreamUrl: string = environment.hlsStreamUrl;
-    currentStream: IMediaStream;
+    currentStream: IMediaStream = null;
     currentStreamTime: number; // in seconds
     currentStreamInTime: number; // in seconds
     currentStreamOutTime: number; // in seconds
@@ -275,5 +276,58 @@ export class ProjectMediaEditingComponent implements OnInit {
                 this.getCurrentSequenceMedias(sequence.sequenceId);
             }
         });
+    }
+
+    deleteSequence() {
+        this.dialog.open(ConfirmComponent, {
+            width: '300px',
+            data: 'Želite izbrisati sekvenco?'
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                const request: GraphQLRequestModel = this.graphQLService.DeleteSequenceMutation(
+                    this.currentProjectId,
+                    this.currentSequence.sequence.sequenceId);
+                this.graphQLService.graphQLRequest(request)
+                    .subscribe(
+                        (rsp: any) => {
+                            this.projectSequences = rsp.deleteSequence.map(seq => new SequenceModel(seq));
+                            this.currentSequence = null;
+                            this.currentStream = null;
+                            this.changeDetector.markForCheck();
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            }
+        });
+    }
+
+    cutVideo(): void {
+        if (!this.currentStreamInTime || this.currentStreamInTime <= 0 ||
+            !this.currentStreamOutTime || this.currentStreamOutTime <= 0 ||
+            this.currentStreamOutTime === this.currentStreamInTime ||
+            this.currentStreamOutTime < this.currentStreamInTime
+        ) {
+            console.error('incorrent in/out time data');
+            return;
+        }
+
+        const request: GraphQLRequestModel = this.graphQLService.CutMedia(
+            Number(this.currentStreamInTime),
+            Number(this.currentStreamOutTime),
+            this.currentProjectId,
+            this.currentMediaPlay.mediaId);
+        this.graphQLService.graphQLRequest(request)
+            .subscribe(
+                (rsp: any) => {
+                    this.getProjectMedias();
+                    this.currentStreamInTime = null;
+                    this.currentStreamOutTime = null;
+                },
+                error =>  {
+                    console.log(error);
+                }
+            );
     }
 }

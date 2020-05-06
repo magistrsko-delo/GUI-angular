@@ -48,7 +48,7 @@
                         </div>
                     </div>
 
-                    <button *ngIf="currentMediaPlay" class="fullwidth" mat-raised-button color="primary" style="margin: 1em">POREŽI VIDEO</button>
+                    <button *ngIf="currentMediaPlay" class="fullwidth" (click)="cutVideo()" mat-raised-button color="primary" style="margin: 1em">POREŽI VIDEO</button>
                 </div>
             </div>
         </div>
@@ -73,11 +73,11 @@
                              style="height: 600px; overflow: scroll;">
 
                             <app-media-card *ngFor="let media of mediaSearchArray index as i"
-                                            [style]="{'cursor': !checkIfDraggable(media) ? 'auto': 'grab'}"
+                                            [style]="{'cursor': !checkIfDraggable(media) || media.status < 3 ? 'alias': 'grab'}"
                                             (cdkDragStarted)="onSearchMediaDrag($event, media, i)"
                                             (cdkDragEnded)="dragDropService.onDragEnded()"
                                             [cdkDragData]="'media'"
-                                            [cdkDragDisabled]="!checkIfDraggable(media)"
+                                            [cdkDragDisabled]="!checkIfDraggable(media) || media.status < 3"
                                             cdkDrag
                                             (mediaForPlayEvent)="playOneMedia($event)"
                                             [media]="media"
@@ -100,11 +100,11 @@
                             style="height: 300px; overflow-y: scroll;">
 
                             <app-media-card
-                                [style]="{'cursor': !checkIfDraggable(media) ? 'auto': 'grab'}"
+                                [style]="{'cursor': !checkIfDraggable(media) || media.status < 3 ? 'alias': 'grab'}"
                                 (cdkDragStarted)="onProjectMediaDrag($event, media, i)"
                                 (cdkDragEnded)="dragDropService.onDragEnded()"
                                 [cdkDragData]="'media'"
-                                [cdkDragDisabled]="!checkIfDraggable(media)"
+                                [cdkDragDisabled]="!checkIfDraggable(media) || media.status < 3"
                                 cdkDrag
                                 *ngFor="let media of projectMedias index as i"
                                 (mediaForPlayEvent)="playOneMedia($event)" [media]="media"
@@ -147,7 +147,7 @@
                 <button mat-mini-fab color="primary" style="margin-left: 1em;" (click)="playSeqeunce(currentSequence.sequence)"><mat-icon>play_arrow</mat-icon></button>
                 <div fxFlex></div>
                 <button mat-raised-button color="primary">OBJAVI</button>
-                <button mat-raised-button color="warn">IZBRIŠI</button>
+                <button mat-raised-button color="warn" (click)="deleteSequence()">IZBRIŠI</button>
             </mat-toolbar>
 
             <div class="scrolling-wrapper-flexbox"

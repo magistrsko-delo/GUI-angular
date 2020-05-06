@@ -179,4 +179,41 @@ export class GraphQLService {
             }
         });
     }
+
+    public DeleteSequenceMutation(projectId: number, sequenceId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation {deleteSequence(projectId: ' + projectId + ', sequenceId: ' + sequenceId + '){' +
+                'sequenceId,' +
+                'name,' +
+                'projectId,' +
+                'thumbnail,' +
+                'status,' +
+                '}}'
+        });
+    }
+
+    public CutMedia(from: number, to: number, projectId: number, mediaId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation ($cutMediaInput: CutMediaType!) { cutMedia(cutMediaInput: $cutMediaInput) { ' +
+                'mediaId,' +
+                'name,' +
+                'siteName,' +
+                'thumbnail,' +
+                'projectId,' +
+                'status,' +
+                'thumbnail,' +
+                'awsBucketWholeMedia,' +
+                'awsStorageNameWholeMedia,' +
+                'createdAt,' +
+                '} }',
+            variables: {
+                cutMediaInput: {
+                    from,
+                    to,
+                    projectId,
+                    mediaId,
+                }
+            }
+        });
+    }
 }
