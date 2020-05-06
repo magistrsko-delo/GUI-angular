@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {GraphQLService} from '../../services/graph-ql.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,6 +9,8 @@ import {MatSelectChange} from '@angular/material/select';
 import {SequenceModel} from '../../models/SequenceModels';
 import {IMediaStream} from '../../models/IMediaStream';
 import {SequenceMediaModel} from '../../models/SequenceMediaModel';
+import {CdkDragDrop, CdkDragStart} from '@angular/cdk/drag-drop';
+import {DragDropService} from '../../services/drag-drop.service';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -32,13 +34,21 @@ export class ProjectMediaEditingComponent implements OnInit {
 
     currentMediaPlay: MediaModel;
 
-    // currnet sequence
+    // current sequence
     currentSequence: SequenceMediaModel;
+
+    /**
+     * data for dragged items
+     */
+    @ViewChild('mediaSearchList', {read: ElementRef}) mediaSearchListVar: ElementRef;
+    @ViewChild('mediaProjectList', {read: ElementRef}) mediaProjectListVar: ElementRef;
+    mediaDrag: MediaModel;
     constructor(
         private graphQLService: GraphQLService,
         private router: Router,
         private route: ActivatedRoute,
         private changeDetector: ChangeDetectorRef,
+        public dragDropService: DragDropService
     ) {
         // super();
     }
@@ -141,7 +151,7 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.currentStream = new IMediaStream({
             type: 'hls',
             label: sequence.name,
-            source: this.hlsStreamUrl + 'v1/vod/sequence/' + sequence.sequenceId + '/1080p.m3u8',
+            source: this.hlsStreamUrl + 'v1/vod/sequence/' + sequence.sequenceId + '/1080p.m3u8?q=' + Math.random(),
             poster: sequence.thumbnail && sequence.thumbnail !== ''
                 ? this.mediaManagerUrl + sequence.thumbnail + '?isImage=true' : '',
         });
@@ -171,5 +181,23 @@ export class ProjectMediaEditingComponent implements OnInit {
                     console.log(error);
                 }
             );
+    }
+
+    dropMedia($event: CdkDragDrop<any, any>) {
+        console.log('media drag: ', this.mediaDrag);
+        this.dragDropService.setEnteredScope('');
+        this.changeDetector.markForCheck();
+    }
+
+    onSearchMediaDrag($event: CdkDragStart, media: MediaModel, i: number): void {
+        this.dragDropService.onDragStart(this.mediaSearchListVar, i, 'media');
+        this.mediaDrag = media;
+        this.changeDetector.markForCheck();
+    }
+
+    onProjectMediaDrag($event: any, media: MediaModel, i: number) {
+        this.dragDropService.onDragStart(this.mediaProjectListVar, i, 'media');
+        this.mediaDrag = media;
+        this.changeDetector.markForCheck();
     }
 }

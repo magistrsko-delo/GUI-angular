@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule } from '@hitrecord/videogular2';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -37,6 +38,7 @@ import { MainComponent } from './components/main.component';
         HttpClientModule,
         FormsModule,
         PlayerModule,
+        DragDropModule
         /*VgCoreModule,
         VgControlsModule,
         VgOverlayPlayModule,

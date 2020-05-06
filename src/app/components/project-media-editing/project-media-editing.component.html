@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" cdkDropListGroup>
     <div class="row">
         <div class="col-8">
             <mat-toolbar>
@@ -67,10 +67,21 @@
                             </mat-form-field>
                         </div>
 
-                        <div style="height: 600px; overflow: scroll;">
-                            <ng-container *ngFor="let media of mediaSearchArray">
-                                <app-media-card (mediaForPlayEvent)="playOneMedia($event)" [media]="media"></app-media-card>
-                            </ng-container>
+                        <div #mediaSearchList
+                            cdkDropList
+                             cdkDropListSortingDisabled
+                             style="height: 600px; overflow: scroll;">
+
+                            <app-media-card *ngFor="let media of mediaSearchArray index as i"
+                                            style="cursor: grab"
+                                            (cdkDragStarted)="onSearchMediaDrag($event, media, i)"
+                                            (cdkDragEnded)="dragDropService.onDragEnded()"
+                                            [cdkDragData]="'media'"
+                                            cdkDrag
+                                            (mediaForPlayEvent)="playOneMedia($event)"
+                                            [media]="media">
+                                <div *cdkDragPlaceholder></div>
+                            </app-media-card>
                         </div>
 
                     </ng-template>
@@ -78,10 +89,26 @@
                 <mat-tab label="PROJEKT">
                     <ng-template matTabContent>
                         <mat-toolbar style="height: 2em">Posnetki projekta</mat-toolbar>
-                        <div style="height: 300px; overflow-y: scroll;">
-                            <ng-container *ngFor="let media of projectMedias">
-                                <app-media-card (mediaForPlayEvent)="playOneMedia($event)" [media]="media"></app-media-card>
-                            </ng-container>
+
+                        <div
+                            #mediaProjectList
+                            cdkDropList
+                            cdkDropListSortingDisabled
+                            style="height: 300px; overflow-y: scroll;">
+
+                            <app-media-card
+                                style="cursor: grab"
+                                (cdkDragStarted)="onProjectMediaDrag($event, media, i)"
+                                (cdkDragEnded)="dragDropService.onDragEnded()"
+                                [cdkDragData]="'media'"
+                                cdkDrag
+                                *ngFor="let media of projectMedias index as i"
+                                (mediaForPlayEvent)="playOneMedia($event)" [media]="media">
+
+                                <div *cdkDragPlaceholder></div>
+
+                            </app-media-card>
+
                         </div>
 
                         <mat-toolbar style="height: 2em">
@@ -112,7 +139,15 @@
                 <button mat-raised-button color="warn">IZBRIŠI</button>
             </mat-toolbar>
 
-            <div class="scrolling-wrapper-flexbox">
+            <div class="scrolling-wrapper-flexbox"
+                 [style]="{'opacity': dragDropService.getDragEnteredScope() === 'media' ? 0.5: 1.0,
+                            'border': dragDropService.dragScope === 'media' ? '2px dotted green': ''}"
+                 cdkDropList
+                 (cdkDropListEntered)="dragDropService.setEnteredScope('media')"
+                 (cdkDropListExited)="dragDropService.setEnteredScope('');"
+                 (cdkDropListDropped)="dropMedia($event)"
+                 [cdkDropListEnterPredicate]="dragDropService.mediaDragScopePredicate"
+            >
 
                 <div *ngFor="let media of currentSequence.Medias" style="max-width: 25%" class="card">
                     <app-media-card [media]="media"  [isSequenceMedia]="true"></app-media-card>
