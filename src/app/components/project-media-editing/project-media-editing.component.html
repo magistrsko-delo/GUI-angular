@@ -73,10 +73,11 @@
                              style="height: 600px; overflow: scroll;">
 
                             <app-media-card *ngFor="let media of mediaSearchArray index as i"
-                                            style="cursor: grab"
+                                            [style]="{'cursor': !checkIfDraggable(media) ? 'auto': 'grab'}"
                                             (cdkDragStarted)="onSearchMediaDrag($event, media, i)"
                                             (cdkDragEnded)="dragDropService.onDragEnded()"
                                             [cdkDragData]="'media'"
+                                            [cdkDragDisabled]="!checkIfDraggable(media)"
                                             cdkDrag
                                             (mediaForPlayEvent)="playOneMedia($event)"
                                             [media]="media">
@@ -97,10 +98,11 @@
                             style="height: 300px; overflow-y: scroll;">
 
                             <app-media-card
-                                style="cursor: grab"
+                                [style]="{'cursor': !checkIfDraggable(media) ? 'auto': 'grab'}"
                                 (cdkDragStarted)="onProjectMediaDrag($event, media, i)"
                                 (cdkDragEnded)="dragDropService.onDragEnded()"
                                 [cdkDragData]="'media'"
+                                [cdkDragDisabled]="!checkIfDraggable(media)"
                                 cdkDrag
                                 *ngFor="let media of projectMedias index as i"
                                 (mediaForPlayEvent)="playOneMedia($event)" [media]="media">
@@ -160,6 +162,7 @@
                     <h3>Sem vrži medijo v sekvenco</h3>
                 </div>
 
+            </div>
         </div>
     </div>
 </div>

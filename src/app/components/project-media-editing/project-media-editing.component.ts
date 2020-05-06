@@ -221,4 +221,12 @@ export class ProjectMediaEditingComponent implements OnInit {
         const mediaId: number = this.currentSequence.Medias[this.currentSequence.Medias.length - 1].mediaId;
         this.manageMediaInSequence(this.currentSequence.sequence.sequenceId, mediaId, true, false);
     }
+
+    checkIfDraggable(media: MediaModel): boolean {
+        if (!this.currentSequence) {
+            return false;
+        }
+
+        return !this.currentSequence.Medias.find(x => x.mediaId === media.mediaId);
+    }
 }
