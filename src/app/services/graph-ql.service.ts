@@ -87,4 +87,13 @@ export class GraphQLService {
                 '}}'
         });
     }
+
+    public ManageMediaInSequence(sequenceId: number, mediaId: number, isDelete: boolean, isAdd: boolean): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation {manageMediaInSequence(sequenceId:' + sequenceId + ', mediaId: ' + mediaId + ', isDelete: ' + isDelete + ', isAdd: ' + isAdd + ')' +
+                '{sequence{sequenceId, name, status}, ' +
+                'Medias{mediaId, name, siteName, status, thumbnail, projectId} ' +
+                '}}'
+        });
+    }
 }

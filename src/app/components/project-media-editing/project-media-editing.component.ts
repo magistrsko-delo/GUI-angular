@@ -183,9 +183,10 @@ export class ProjectMediaEditingComponent implements OnInit {
             );
     }
 
-    dropMedia($event: CdkDragDrop<any, any>) {
+    dropMedia($event: CdkDragDrop<any, any>): void {
         console.log('media drag: ', this.mediaDrag);
         this.dragDropService.setEnteredScope('');
+        this.manageMediaInSequence(this.currentSequence.sequence.sequenceId,  this.mediaDrag.mediaId, false, true);
         this.changeDetector.markForCheck();
     }
 
@@ -195,9 +196,29 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.changeDetector.markForCheck();
     }
 
-    onProjectMediaDrag($event: any, media: MediaModel, i: number) {
+    onProjectMediaDrag($event: any, media: MediaModel, i: number): void {
         this.dragDropService.onDragStart(this.mediaProjectListVar, i, 'media');
         this.mediaDrag = media;
         this.changeDetector.markForCheck();
+    }
+
+    private manageMediaInSequence(sequenceId: number, mediaId: number, isDelete: boolean = false, isAdd: boolean = false): void {
+        const request: GraphQLRequestModel = this.graphQLService.ManageMediaInSequence(sequenceId, mediaId, isDelete, isAdd);
+        this.graphQLService.graphQLRequest(request)
+            .subscribe(
+                (rsp: any) => {
+                    this.currentSequence = new SequenceMediaModel(rsp.manageMediaInSequence);
+                    this.getProjectSequencesRequest();
+                    this.changeDetector.markForCheck();
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+    }
+
+    deleteLastMediaFromSequence() {
+        const mediaId: number = this.currentSequence.Medias[this.currentSequence.Medias.length - 1].mediaId;
+        this.manageMediaInSequence(this.currentSequence.sequence.sequenceId, mediaId, true, false);
     }
 }

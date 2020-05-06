@@ -148,19 +148,18 @@
                  (cdkDropListDropped)="dropMedia($event)"
                  [cdkDropListEnterPredicate]="dragDropService.mediaDragScopePredicate"
             >
-
                 <div *ngFor="let media of currentSequence.Medias" style="max-width: 25%" class="card">
                     <app-media-card [media]="media"  [isSequenceMedia]="true"></app-media-card>
                 </div>
-                <div style="vertical-align: middle; margin-top: 1em">
-                    <button mat-fab color="warn">
+                <div fxLayoutAlign="center center"  *ngIf="currentSequence.Medias.length > 0">
+                    <button (click)="deleteLastMediaFromSequence()" mat-fab color="warn">
                         <mat-icon>delete</mat-icon>
                     </button><br>
-                    <button mat-fab color="primary" disabled>
-                        <mat-icon>plus_one</mat-icon>
-                    </button>
                 </div>
-            </div>
+                <div *ngIf="currentSequence.Medias.length === 0">
+                    <h3>Sem vrži medijo v sekvenco</h3>
+                </div>
+
         </div>
     </div>
 </div>
