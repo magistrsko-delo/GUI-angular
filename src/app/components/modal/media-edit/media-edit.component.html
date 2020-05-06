@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 style="padding: 0; margin: 0">Media: {{media.name}}</h2>
+            <h4><small>mediaId: {{media.mediaId}}</small></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <mat-form-field class="fullwidth">
+                    <mat-label>Ime</mat-label>
+                    <input matInput placeholder="Ime" [(ngModel)]="media.name">
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-stroked-button color="primary" (click)="updateMediaReq()">POSODOBI</button>
+                <div fxFlex></div>
+                <button mat-stroked-button color="warn" (click)="onNoClick()">PREKLIČI</button>
+            </div>
+
+        </div>
+    </div>
+</div>

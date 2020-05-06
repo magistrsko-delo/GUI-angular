@@ -19,8 +19,8 @@
              fxLayoutGap="10px grid"
              fxLayoutGap.xs="0">
 
-            <div *ngFor="let project of projectArray">
-                <mat-card class="project-card ">
+            <div *ngFor="let project of projectArray index as i">
+                <mat-card style="cursor: alias" (dblclick)="editProject(project, i)" class="project-card ">
                     <mat-card-header>
                         <mat-card-title>{{project.name}}</mat-card-title>
                         <mat-card-subtitle>Project id: {{project.projectId}}</mat-card-subtitle>

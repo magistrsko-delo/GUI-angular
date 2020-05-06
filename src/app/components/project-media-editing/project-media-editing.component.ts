@@ -11,6 +11,9 @@ import {IMediaStream} from '../../models/IMediaStream';
 import {SequenceMediaModel} from '../../models/SequenceMediaModel';
 import {CdkDragDrop, CdkDragStart} from '@angular/cdk/drag-drop';
 import {DragDropService} from '../../services/drag-drop.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MediaEditComponent} from '../modal/media-edit/media-edit.component';
+import {SequenceComponent} from '../modal/sequence/sequence.component';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -29,6 +32,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     currentStreamOutTime: number; // in seconds
 
     mediaSearchArray: Array<MediaModel>;
+    selectedOption = 3;
     projectMedias: Array<MediaModel>;
     projectSequences: Array<SequenceModel>;
 
@@ -48,7 +52,8 @@ export class ProjectMediaEditingComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private changeDetector: ChangeDetectorRef,
-        public dragDropService: DragDropService
+        public dragDropService: DragDropService,
+        public dialog: MatDialog,
     ) {
         // super();
     }
@@ -57,7 +62,7 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.route.paramMap.subscribe(
             params => {
                 this.currentProjectId = Number(params.get('projectId'));
-                console.log(this.currentProjectId);
+                // console.log(this.currentProjectId);
                 this.getCurrentProjectData();
             }
         );
@@ -65,15 +70,16 @@ export class ProjectMediaEditingComponent implements OnInit {
     }
 
     tabEvent(tabIndex: number): void {
-        console.log(tabIndex);
+        // console.log(tabIndex);
         if (tabIndex === 1) {
-            console.log('get project medias and sequences..');
+            // console.log('get project medias and sequences..');
             this.getProjectMedias();
             this.getProjectSequencesRequest();
         }
     }
 
     searchNewMedia($event: MatSelectChange): void {
+        this.selectedOption = $event.value;
         this.getMediasStatusBasedOnStatus($event.value);
     }
 
@@ -97,7 +103,7 @@ export class ProjectMediaEditingComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.currentProject = new ProjectModel(rsp.oneProjectMetadata);
-                    console.log('current project: ', this.currentProject);
+                   // console.log('current project: ', this.currentProject);
                     this.changeDetector.markForCheck();
                 },
                 error => {
@@ -126,7 +132,7 @@ export class ProjectMediaEditingComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.projectSequences = rsp.getProjectSequences.map(sequenceData => new SequenceModel(sequenceData));
-                    console.log(this.projectSequences);
+                    // console.log(this.projectSequences);
                     this.changeDetector.markForCheck();
                 },
                 error => {
@@ -168,13 +174,13 @@ export class ProjectMediaEditingComponent implements OnInit {
     }
 
     getCurrentSequenceMedias(sequenceId: number) {
-        console.log('id: ', sequenceId);
+       // console.log('id: ', sequenceId);
         const request: GraphQLRequestModel = this.graphQLService.GetSequenceMedias(sequenceId);
         this.graphQLService.graphQLRequest(request)
             .subscribe(
                 (rsp: any) => {
                     this.currentSequence = new SequenceMediaModel(rsp.getSequenceMedias);
-                    console.log(this.currentSequence);
+                    // console.log(this.currentSequence);
                     this.changeDetector.markForCheck();
                 },
                 error => {
@@ -184,7 +190,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     }
 
     dropMedia($event: CdkDragDrop<any, any>): void {
-        console.log('media drag: ', this.mediaDrag);
+        // console.log('media drag: ', this.mediaDrag);
         this.dragDropService.setEnteredScope('');
         this.manageMediaInSequence(this.currentSequence.sequence.sequenceId,  this.mediaDrag.mediaId, false, true);
         this.changeDetector.markForCheck();
@@ -228,5 +234,46 @@ export class ProjectMediaEditingComponent implements OnInit {
         }
 
         return !this.currentSequence.Medias.find(x => x.mediaId === media.mediaId);
+    }
+
+    editMedia(media: MediaModel, i: number, search: string) {
+        this.dialog.open(MediaEditComponent, {
+            width: '500px',
+            data: media
+        }).afterClosed().subscribe(
+            result => {
+                if (result) {
+                    if (search === 'search') {
+                        this.mediaSearchArray[i] = media;
+                        this.getMediasStatusBasedOnStatus(this.selectedOption);
+                    } else {
+                        this.projectMedias[i] = media;
+                        this.getProjectMedias();
+                    }
+                    this.changeDetector.markForCheck();
+                }
+            }
+        );
+    }
+
+    createSequence() {
+        this.dialog.open(SequenceComponent, {
+            width: '500px',
+            data: this.currentProjectId
+        }).afterClosed().subscribe(result => {
+            this.getProjectSequencesRequest();
+        });
+    }
+
+    updateSequence(sequence: SequenceModel) {
+        this.dialog.open(SequenceComponent, {
+            width: '500px',
+            data: sequence
+        }).afterClosed().subscribe(result => {
+            this.getProjectSequencesRequest();
+            if (sequence.sequenceId === this.currentSequence.sequence.sequenceId) {
+                this.getCurrentSequenceMedias(sequence.sequenceId);
+            }
+        });
     }
 }

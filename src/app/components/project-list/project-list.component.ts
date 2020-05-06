@@ -4,11 +4,11 @@ import {GraphQLRequestModel} from '../../models/GraphQLRequest-model';
 import {ProjectModel} from '../../models/ProjectModel';
 import {environment} from '../../../environments/environment';
 import {Router} from '@angular/router';
-import {MainComponent} from '../main.component';
-import {takeUntil} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {ProjectEditComponent} from '../modal/project-edit/project-edit.component';
+import {ConfirmComponent} from '../modal/confirm/confirm.component';
 
 @Component({
-    selector: 'app-project-list',
     templateUrl: './project-list.component.html',
     styleUrls: ['./project-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,6 +19,7 @@ export class ProjectListComponent implements OnInit {
     mediaManagerUrl: string = environment.mediaManagerUrl;
 
     constructor(
+        public dialog: MatDialog,
         private graphQLService: GraphQLService,
         private router: Router,
         private changeDetector: ChangeDetectorRef,
@@ -32,7 +33,7 @@ export class ProjectListComponent implements OnInit {
 
     private getProjects(): void {
         const request: GraphQLRequestModel =  this.graphQLService.GetProjectDataRequest();
-        console.log(request);
+        // console.log(request);
         this.graphQLService.graphQLRequest(request)
             .subscribe(
                 (rsp: any) => {
@@ -46,15 +47,48 @@ export class ProjectListComponent implements OnInit {
     }
 
     public openProject(project: ProjectModel){
-        console.log('opening: ', project);
+        // console.log('opening: ', project);
         this.router.navigate(['/project/' + project.projectId + '/editor']);
     }
 
     public removeProject(project: ProjectModel) {
-        console.log('removing: ', project);
+        this.dialog.open(ConfirmComponent, {
+            width: '300px',
+            data: 'Želite izbrisati projekt?'
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                console.log('potrjeno brisanje projekta');
+                const request: GraphQLRequestModel = this.graphQLService.DeleteProjectMutation(project.projectId);
+                this.graphQLService.graphQLRequest(request)
+                    .subscribe(
+                        (rsp: any) => {
+                            console.log(rsp.deleteProject);
+                            this.projectArray = rsp.deleteProject.map(project1 => new ProjectModel(project1));
+                            console.error('DELETE FOR PROJECT CURRENTLY UNAVAILABLE');
+                            this.changeDetector.markForCheck();
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            }
+        });
     }
 
     public addProject(){
+        // TODO
         console.log('adding project');
+    }
+
+    editProject(project: ProjectModel, index: number) {
+        this.dialog.open(ProjectEditComponent, {
+            width: '500px',
+            data: project
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                this.projectArray[index] = result;
+                this.changeDetector.markForCheck();
+            }
+        });
     }
 }

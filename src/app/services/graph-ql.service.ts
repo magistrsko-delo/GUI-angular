@@ -4,6 +4,8 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {GraphQLRequestModel} from '../models/GraphQLRequest-model';
+import {ProjectModel} from '../models/ProjectModel';
+import {SequenceModel} from '../models/SequenceModels';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +29,8 @@ export class GraphQLService {
             query: 'query {projectsMetadata{' +
                 'projectId,' +
                 'name,' +
-                'thumbnail' +
+                'thumbnail,' +
+                'createdAt,' +
                 '}}'
         });
     }
@@ -50,6 +53,11 @@ export class GraphQLService {
                 'thumbnail,' +
                 'projectId,' +
                 'status,' +
+                'thumbnail,' +
+                'awsBucketWholeMedia,' +
+                'awsStorageNameWholeMedia,' +
+                'createdAt,' +
+                'length,' +
                 '}}'
         });
     }
@@ -63,6 +71,11 @@ export class GraphQLService {
                 'thumbnail,' +
                 'projectId,' +
                 'status,' +
+                'thumbnail,' +
+                'awsBucketWholeMedia,' +
+                'awsStorageNameWholeMedia,' +
+                'createdAt,' +
+                'length,' +
                 '}}'
         });
     }
@@ -94,6 +107,76 @@ export class GraphQLService {
                 '{sequence{sequenceId, name, status}, ' +
                 'Medias{mediaId, name, siteName, status, thumbnail, projectId} ' +
                 '}}'
+        });
+    }
+
+    public ProjectUpdateMutation(project: ProjectModel): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation ($projectUpdate: UpdateProjectMetadata!) { updateProjectMetadata(projectUpdate: $projectUpdate) { projectId, name, thumbnail, createdAt } }',
+            variables: {
+                projectUpdate: project
+            }
+        });
+    }
+
+    public DeleteProjectMutation(projectId: number): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation {deleteProject(projectId: ' + projectId + '){' +
+                'projectId,' +
+                'name,' +
+                'thumbnail,' +
+                'createdAt,' +
+                '}}'
+        });
+    }
+
+    public MediaUpdateMutation(media: ProjectModel): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation ($mediaData: UpdateMedia!) { updateMedia(mediaData: $mediaData) { ' +
+                'mediaId,' +
+                'name,' +
+                'siteName,' +
+                'thumbnail,' +
+                'projectId,' +
+                'status,' +
+                'thumbnail,' +
+                'awsBucketWholeMedia,' +
+                'awsStorageNameWholeMedia,' +
+                'createdAt,' +
+                '} }',
+            variables: {
+                mediaData: media
+            }
+        });
+    }
+
+    public CreateSequence(newSequenceData: SequenceModel): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation ($newSequence: InputSequenceType!) { createSequence(newSequence: $newSequence) { ' +
+                'sequenceId,' +
+                'name,' +
+                'projectId,' +
+                'thumbnail,' +
+                'status,' +
+                '} }',
+            variables: {
+                newSequence: newSequenceData
+            }
+        });
+    }
+
+    public UpdateSequence(sequence: SequenceModel): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation ($updateSequenceData: InputSequenceType!) { updateSequence(updateSequenceData: $updateSequenceData) { ' +
+                'sequenceId,' +
+                'name,' +
+                'projectId,' +
+                'thumbnail,' +
+                'status,' +
+                '} }',
+            variables: {
+                updateSequenceData: sequence
+            }
         });
     }
 }

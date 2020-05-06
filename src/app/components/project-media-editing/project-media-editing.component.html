@@ -80,7 +80,9 @@
                                             [cdkDragDisabled]="!checkIfDraggable(media)"
                                             cdkDrag
                                             (mediaForPlayEvent)="playOneMedia($event)"
-                                            [media]="media">
+                                            [media]="media"
+                                            (dblclick)="editMedia(media, i, 'search')"
+                            >
                                 <div *cdkDragPlaceholder></div>
                             </app-media-card>
                         </div>
@@ -105,7 +107,9 @@
                                 [cdkDragDisabled]="!checkIfDraggable(media)"
                                 cdkDrag
                                 *ngFor="let media of projectMedias index as i"
-                                (mediaForPlayEvent)="playOneMedia($event)" [media]="media">
+                                (mediaForPlayEvent)="playOneMedia($event)" [media]="media"
+                                (dblclick)="editMedia(media, i, 'project')"
+                            >
 
                                 <div *cdkDragPlaceholder></div>
 
@@ -116,11 +120,16 @@
                         <mat-toolbar style="height: 2em">
                             Sekvence
                             <div fxFlex=""></div>
-                            <button mat-raised-button color="primary">Dodaj</button>
+                            <button mat-raised-button color="primary" (click)="createSequence()">Dodaj</button>
                         </mat-toolbar>
                         <div style="height: 300px; overflow-y: scroll;">
                             <ng-container *ngFor="let sequence of projectSequences">
-                                <app-sequence-card (editSequenceEvent)="getCurrentSequenceMedias($event)" [sequence]="sequence"></app-sequence-card>
+                                <app-sequence-card
+                                    style="cursor: alias"
+                                    (dblclick)="updateSequence(sequence)"
+                                    (editSequenceEvent)="getCurrentSequenceMedias($event)"
+                                    [sequence]="sequence"
+                                ></app-sequence-card>
                             </ng-container>
                         </div>
 

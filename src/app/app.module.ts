@@ -4,7 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { VgBufferingModule, VgControlsModule, VgCoreModule, VgOverlayPlayModule, VgStreamingModule } from '@hitrecord/videogular2';
 
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './material/material.module';
@@ -18,6 +17,10 @@ import { ProjectMediaEditingComponent } from './components/project-media-editing
 import { MediaCardComponent } from './components/utils/media-card/media-card.component';
 import { SequenceCardComponent } from './components/utils/sequence-card/sequence-card.component';
 import { MainComponent } from './components/main.component';
+import { ProjectEditComponent } from './components/modal/project-edit/project-edit.component';
+import { ConfirmComponent } from './components/modal/confirm/confirm.component';
+import { MediaEditComponent } from './components/modal/media-edit/media-edit.component';
+import { SequenceComponent } from './components/modal/sequence/sequence.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +30,11 @@ import { MainComponent } from './components/main.component';
         ProjectMediaEditingComponent,
         MediaCardComponent,
         SequenceCardComponent,
-        MainComponent
+        MainComponent,
+        ProjectEditComponent,
+        ConfirmComponent,
+        MediaEditComponent,
+        SequenceComponent
     ],
     imports: [
         BrowserModule,
@@ -39,11 +46,6 @@ import { MainComponent } from './components/main.component';
         FormsModule,
         PlayerModule,
         DragDropModule
-        /*VgCoreModule,
-        VgControlsModule,
-        VgOverlayPlayModule,
-        VgBufferingModule,
-        VgStreamingModule*/
     ],
     providers: [],
     bootstrap: [AppComponent]
