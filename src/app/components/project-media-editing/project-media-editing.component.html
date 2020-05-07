@@ -79,7 +79,7 @@
                                             [cdkDragData]="'media'"
                                             [cdkDragDisabled]="!checkIfDraggable(media) || media.status < 3"
                                             cdkDrag
-                                            (mediaForPlayEvent)="playOneMedia($event)"
+                                            (mediaForPlayEvent)="playOneMedia($event, i, 'search')"
                                             [media]="media"
                                             (dblclick)="editMedia(media, i, 'search')"
                             >
@@ -107,7 +107,7 @@
                                 [cdkDragDisabled]="!checkIfDraggable(media) || media.status < 3"
                                 cdkDrag
                                 *ngFor="let media of projectMedias index as i"
-                                (mediaForPlayEvent)="playOneMedia($event)" [media]="media"
+                                (mediaForPlayEvent)="playOneMedia($event, i, 'project')" [media]="media"
                                 (dblclick)="editMedia(media, i, 'project')"
                             >
 

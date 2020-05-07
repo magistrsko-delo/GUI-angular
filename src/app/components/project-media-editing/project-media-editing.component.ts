@@ -40,6 +40,8 @@ export class ProjectMediaEditingComponent implements OnInit {
     projectSequences: Array<SequenceModel>;
 
     currentMediaPlay: MediaModel;
+    selectedIndex: number;
+    type: string;
 
     // current sequence
     currentSequence: SequenceMediaModel;
@@ -79,6 +81,8 @@ export class ProjectMediaEditingComponent implements OnInit {
             // console.log('get project medias and sequences..');
             this.getProjectMedias();
             this.getProjectSequencesRequest();
+        } else {
+            this.getMediasStatusBasedOnStatus(this.selectedOption);
         }
     }
 
@@ -93,6 +97,9 @@ export class ProjectMediaEditingComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.mediaSearchArray = rsp.searchMedias.map(media => new MediaModel(media));
+                    if (this.currentMediaPlay && this.type === 'search') {
+                        this.currentMediaPlay = this.mediaSearchArray[this.selectedIndex];
+                    }
                     this.changeDetector.markForCheck();
                 },
                 error => {
@@ -122,6 +129,9 @@ export class ProjectMediaEditingComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.projectMedias = rsp.searchMedias.map(media => new MediaModel(media));
+                    if (this.currentMediaPlay && this.type === 'project') {
+                        this.currentMediaPlay = this.projectMedias[this.selectedIndex];
+                    }
                     this.changeDetector.markForCheck();
                 },
                 error => {
@@ -145,8 +155,10 @@ export class ProjectMediaEditingComponent implements OnInit {
             );
     }
 
-    playOneMedia($event: MediaModel) {
+    playOneMedia($event: MediaModel, i: number, type: string) {
         this.currentMediaPlay = $event;
+        this.selectedIndex = i;
+        this.type = type;
         this.currentStream = new IMediaStream({
             type: 'hls',
             label: this.currentMediaPlay.name,
@@ -360,6 +372,10 @@ export class ProjectMediaEditingComponent implements OnInit {
                     .subscribe(
                         (rsp: boolean) => {
                             console.log('Slika medie poslana v obdelavo: ' + rsp);
+                            setInterval(() => {
+                                this.getMediasStatusBasedOnStatus(this.selectedOption);
+                                this.getProjectMedias();
+                            }, 5000);
                         },
                         error => {
                             console.log(error);
