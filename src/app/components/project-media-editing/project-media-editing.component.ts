@@ -355,7 +355,7 @@ export class ProjectMediaEditingComponent implements OnInit {
                 if (result) {
                     this.currentSequence = null;
                     this.getProjectSequencesRequest();
-                    this.getMediasStatusBasedOnStatus(this.selectedOption);
+                    this.currentSequence = null;
                 }
             }
         );
@@ -372,10 +372,10 @@ export class ProjectMediaEditingComponent implements OnInit {
                     .subscribe(
                         (rsp: boolean) => {
                             console.log('Slika medie poslana v obdelavo: ' + rsp);
-                            setInterval(() => {
+                            const intervalListener = setInterval(() => {
                                 this.getMediasStatusBasedOnStatus(this.selectedOption);
                                 this.getProjectMedias();
-                                clearInterval();
+                                window.clearInterval(intervalListener);
                             }, 5000);
                         },
                         error => {
