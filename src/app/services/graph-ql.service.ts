@@ -216,4 +216,19 @@ export class GraphQLService {
             }
         });
     }
+
+    public PublishSequence(sequenceId: number, name: string, siteName: string): GraphQLRequestModel {
+        return new GraphQLRequestModel({
+            query: 'mutation ($publishData: PublishSequenceType!) {publishSequence(publishData: $publishData){' +
+                'isPublished,' +
+                '}}',
+            variables: {
+                publishData: {
+                    sequenceId,
+                    name,
+                    siteName
+                }
+            }
+        });
+    }
 }

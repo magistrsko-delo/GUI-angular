@@ -21,6 +21,7 @@ import { ProjectEditComponent } from './components/modal/project-edit/project-ed
 import { ConfirmComponent } from './components/modal/confirm/confirm.component';
 import { MediaEditComponent } from './components/modal/media-edit/media-edit.component';
 import { SequenceComponent } from './components/modal/sequence/sequence.component';
+import { PublishSequenceComponent } from './components/modal/publish-sequence/publish-sequence.component';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,8 @@ import { SequenceComponent } from './components/modal/sequence/sequence.componen
         ProjectEditComponent,
         ConfirmComponent,
         MediaEditComponent,
-        SequenceComponent
+        SequenceComponent,
+        PublishSequenceComponent
     ],
     imports: [
         BrowserModule,

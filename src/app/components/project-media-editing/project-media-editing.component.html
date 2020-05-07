@@ -21,7 +21,7 @@
                         </div>
                         <div fxFlex=""></div>
                         <div fxLayoutAlign="center">
-                            <button mat-raised-button color="primary" style=" white-space: pre-wrap !important;"><mat-icon>add_a_photo</mat-icon></button>
+                            <button (click)="takeMediaImage()" mat-raised-button color="primary" style=" white-space: pre-wrap !important;"><mat-icon>add_a_photo</mat-icon></button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                 <i><small>sequenceId: {{currentSequence.sequence.sequenceId}}, status: {{currentSequence.sequence.status}}</small></i>
                 <button mat-mini-fab color="primary" style="margin-left: 1em;" (click)="playSeqeunce(currentSequence.sequence)"><mat-icon>play_arrow</mat-icon></button>
                 <div fxFlex></div>
-                <button mat-raised-button color="primary">OBJAVI</button>
+                <button mat-raised-button color="primary" (click)="publishSequence()">OBJAVI</button>
                 <button mat-raised-button color="warn" (click)="deleteSequence()">IZBRIŠI</button>
             </mat-toolbar>
 

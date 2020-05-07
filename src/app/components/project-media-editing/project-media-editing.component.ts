@@ -15,6 +15,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {MediaEditComponent} from '../modal/media-edit/media-edit.component';
 import {SequenceComponent} from '../modal/sequence/sequence.component';
 import {ConfirmComponent} from '../modal/confirm/confirm.component';
+import {PublishSequenceComponent} from '../modal/publish-sequence/publish-sequence.component';
+import {MediaManagerService} from '../../services/media-manager.service';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -50,6 +52,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     mediaDrag: MediaModel;
     constructor(
         private graphQLService: GraphQLService,
+        private mediaManagerService: MediaManagerService,
         private router: Router,
         private route: ActivatedRoute,
         private changeDetector: ChangeDetectorRef,
@@ -329,5 +332,40 @@ export class ProjectMediaEditingComponent implements OnInit {
                     console.log(error);
                 }
             );
+    }
+
+    publishSequence() {
+        this.dialog.open(PublishSequenceComponent, {
+            width: '500px',
+            data: this.currentSequence.sequence
+        }).afterClosed().subscribe(
+            result => {
+                if (result) {
+                    this.currentSequence = null;
+                    this.getProjectSequencesRequest();
+                    this.getMediasStatusBasedOnStatus(this.selectedOption);
+                }
+            }
+        );
+    }
+
+    takeMediaImage() {
+        const time = this.currentStreamTime;
+        this.dialog.open(ConfirmComponent, {
+            width: '200px',
+            data: 'Želite vzeti zaslonski posnetek medie: ' + this.currentMediaPlay.name + '  ob času: ' + time
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                this.mediaManagerService.createMediaImage(this.currentMediaPlay.mediaId, time)
+                    .subscribe(
+                        (rsp: boolean) => {
+                            console.log('Slika medie poslana v obdelavo: ' + rsp);
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            }
+        });
     }
 }
