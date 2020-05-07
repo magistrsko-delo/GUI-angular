@@ -59,7 +59,7 @@
                         <div>
                             <mat-form-field class="fullwidth">
                                 <mat-label>izberi tiš medije</mat-label>
-                                <mat-select [value]="3" (selectionChange)="searchNewMedia($event)">
+                                <mat-select [(ngModel)]="selectedOption" (selectionChange)="searchNewMedia($event)">
                                     <mat-option [value]="3">OBJAVLJENA</mat-option>
                                     <mat-option [value]="1">PROCESIRANJE</mat-option>
                                     <mat-option [value]="-1">VSA MEDIA</mat-option>

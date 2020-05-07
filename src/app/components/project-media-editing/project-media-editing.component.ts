@@ -375,6 +375,7 @@ export class ProjectMediaEditingComponent implements OnInit {
                             setInterval(() => {
                                 this.getMediasStatusBasedOnStatus(this.selectedOption);
                                 this.getProjectMedias();
+                                clearInterval();
                             }, 5000);
                         },
                         error => {
