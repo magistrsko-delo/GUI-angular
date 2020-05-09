@@ -100,6 +100,8 @@
                             style="height: 300px; overflow-y: scroll;">
 
                             <app-media-card
+                                (deleteMediaEvent)="deleteMedia(media)"
+                                [canDelete]="true"
                                 [style]="{'cursor': !checkIfDraggable(media) || media.status < 3 ? 'alias': 'grab'}"
                                 (cdkDragStarted)="onProjectMediaDrag($event, media, i)"
                                 (cdkDragEnded)="dragDropService.onDragEnded()"

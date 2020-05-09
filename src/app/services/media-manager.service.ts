@@ -23,6 +23,11 @@ export class MediaManagerService {
             .pipe(map( (rsp: any) => rsp.data ) );
     }
 
+    public deleteMedia(mediaId: number): Observable<boolean> {
+        return this.http.delete(this.mediaManagerUrl + 'v1/mediaManager/' + mediaId )
+            .pipe(map( (rsp: any) => rsp.data ) );
+    }
+
     public uploadFile(fileToUpload: File, mediaName: string, siteName: string) {
         const formData: FormData = new FormData();
         formData.append('mediaStream', fileToUpload, fileToUpload.name);

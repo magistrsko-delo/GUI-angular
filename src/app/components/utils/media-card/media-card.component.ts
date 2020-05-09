@@ -12,10 +12,12 @@ export class MediaCardComponent implements OnInit {
     @Input() isSequenceMedia = false;
     @Input() media: MediaModel;
     @Input() canDelete = false;
+    @Input() canDownload = false;
 
     @Output() mediaForPlayEvent = new EventEmitter<MediaModel>();
     @Output() deleteMediaEvent = new EventEmitter<boolean>();
     mediaManagerUrl: string = environment.mediaManagerUrl;
+
     constructor(
         private changeDetector: ChangeDetectorRef,
     ) { }

@@ -385,4 +385,23 @@ export class ProjectMediaEditingComponent implements OnInit {
             }
         });
     }
+
+    deleteMedia(media: MediaModel) {
+        this.dialog.open(ConfirmComponent, {
+            width: '300px',
+            data: 'Želite izbrisati medio ' + media.name + '?'
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                this.mediaManagerService.deleteMedia(media.mediaId)
+                    .subscribe(
+                        (rsp: boolean) => {
+                            this.getProjectMedias();
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            }
+        });
+    }
 }

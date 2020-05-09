@@ -86,13 +86,21 @@ export class LiveMediaComponent implements OnInit {
             );
     }
 
-    deleteMedia() {
+    deleteMedia(media: MediaModel) {
         this.dialog.open(ConfirmComponent, {
             width: '300px',
-            data: 'Želite izbrisati medio?'
+            data: 'Želite izbrisati medio ' + media.name + '?'
         }).afterClosed().subscribe(result => {
             if (result) {
-                console.error('MEDIA DELETE CURRENTLY UNAVAILABLE');
+                this.mediaManagerService.deleteMedia(media.mediaId)
+                    .subscribe(
+                        (rsp: boolean) => {
+                            this.getMediasStatusBasedOnStatus(this.selectedOption);
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
             }
         });
     }

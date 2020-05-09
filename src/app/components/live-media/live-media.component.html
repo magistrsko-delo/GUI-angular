@@ -43,9 +43,10 @@
 
                             <app-media-card *ngFor="let media of mediaSearchArray index as i"
                                             (mediaForPlayEvent)="playOneMedia($event, i, 'search')"
-                                            (deleteMediaEvent)="deleteMedia()"
+                                            (deleteMediaEvent)="deleteMedia(media)"
                                             [media]="media"
                                             [canDelete]="true"
+                                            [canDownload]="true"
                                             (dblclick)="editMedia(media, i, 'search')"
                             >
                                 <div *cdkDragPlaceholder></div>
