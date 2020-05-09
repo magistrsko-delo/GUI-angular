@@ -17,6 +17,7 @@ import {SequenceComponent} from '../modal/sequence/sequence.component';
 import {ConfirmComponent} from '../modal/confirm/confirm.component';
 import {PublishSequenceComponent} from '../modal/publish-sequence/publish-sequence.component';
 import {MediaManagerService} from '../../services/media-manager.service';
+import {ToastService} from '../../services/toast.service';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -58,6 +59,7 @@ export class ProjectMediaEditingComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private changeDetector: ChangeDetectorRef,
+        private toastService: ToastService,
         public dragDropService: DragDropService,
         public dialog: MatDialog,
     ) {
@@ -68,7 +70,6 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.route.paramMap.subscribe(
             params => {
                 this.currentProjectId = Number(params.get('projectId'));
-                // console.log(this.currentProjectId);
                 this.getCurrentProjectData();
             }
         );
@@ -76,9 +77,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     }
 
     tabEvent(tabIndex: number): void {
-        // console.log(tabIndex);
         if (tabIndex === 1) {
-            // console.log('get project medias and sequences..');
             this.getProjectMedias();
             this.getProjectSequencesRequest();
         } else {
@@ -103,7 +102,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -114,11 +114,11 @@ export class ProjectMediaEditingComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.currentProject = new ProjectModel(rsp.oneProjectMetadata);
-                   // console.log('current project: ', this.currentProject);
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -135,7 +135,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -146,11 +147,11 @@ export class ProjectMediaEditingComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.projectSequences = rsp.getProjectSequences.map(sequenceData => new SequenceModel(sequenceData));
-                    // console.log(this.projectSequences);
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -190,23 +191,21 @@ export class ProjectMediaEditingComponent implements OnInit {
     }
 
     getCurrentSequenceMedias(sequenceId: number) {
-       // console.log('id: ', sequenceId);
         const request: GraphQLRequestModel = this.graphQLService.GetSequenceMedias(sequenceId);
         this.graphQLService.graphQLRequest(request)
             .subscribe(
                 (rsp: any) => {
                     this.currentSequence = new SequenceMediaModel(rsp.getSequenceMedias);
-                    // console.log(this.currentSequence);
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
 
     dropMedia($event: CdkDragDrop<any, any>): void {
-        // console.log('media drag: ', this.mediaDrag);
         this.dragDropService.setEnteredScope('');
         this.manageMediaInSequence(this.currentSequence.sequence.sequenceId,  this.mediaDrag.mediaId, false, true);
         this.changeDetector.markForCheck();
@@ -234,7 +233,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -311,7 +311,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                             this.changeDetector.markForCheck();
                         },
                         error => {
-                            console.log(error);
+                            console.error('Error', error);
+                            this.toastService.addToast('Napaka', error.message);
                         }
                     );
             }
@@ -324,7 +325,7 @@ export class ProjectMediaEditingComponent implements OnInit {
             this.currentStreamOutTime === this.currentStreamInTime ||
             this.currentStreamOutTime < this.currentStreamInTime
         ) {
-            console.error('incorrent in/out time data');
+            this.toastService.addToast('Napaka', 'nepravilni vnosni podatki za rezanje videa');
             return;
         }
 
@@ -341,7 +342,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                     this.currentStreamOutTime = null;
                 },
                 error =>  {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -364,14 +366,14 @@ export class ProjectMediaEditingComponent implements OnInit {
     takeMediaImage() {
         const time = this.currentStreamTime;
         this.dialog.open(ConfirmComponent, {
-            width: '200px',
+            width: '500px',
             data: 'Želite vzeti zaslonski posnetek medie: ' + this.currentMediaPlay.name + '  ob času: ' + time
         }).afterClosed().subscribe(result => {
             if (result) {
                 this.mediaManagerService.createMediaImage(this.currentMediaPlay.mediaId, time)
                     .subscribe(
                         (rsp: boolean) => {
-                            console.log('Slika medie poslana v obdelavo: ' + rsp);
+                            this.toastService.addToast('Uspeh', 'Slika medije poslana v obdelavo');
                             const intervalListener = setInterval(() => {
                                 this.getMediasStatusBasedOnStatus(this.selectedOption);
                                 this.getProjectMedias();
@@ -379,7 +381,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                             }, 5000);
                         },
                         error => {
-                            console.log(error);
+                            console.error('Error', error);
+                            this.toastService.addToast('Napaka', error.message);
                         }
                     );
             }
@@ -398,7 +401,8 @@ export class ProjectMediaEditingComponent implements OnInit {
                             this.getProjectMedias();
                         },
                         error => {
-                            console.log(error);
+                            console.error('Error', error);
+                            this.toastService.addToast('Napaka', error.message);
                         }
                     );
             }

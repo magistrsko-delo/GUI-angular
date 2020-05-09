@@ -59,7 +59,7 @@ export class DragDropService {
                 }
                 this.dragList.nativeElement.children[this.currentIndex].style.border = '';
             } catch (e) {
-                console.log('onDragEnded', e);
+                console.error('onDragEnded', e);
             }
         }
         this.dragScope = null;

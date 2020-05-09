@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {SequenceModel} from '../../../models/SequenceModels';
 import {GraphQLService} from '../../../services/graph-ql.service';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     templateUrl: './sequence.component.html',
@@ -15,7 +16,8 @@ export class SequenceComponent extends ModalComponent implements OnInit {
     constructor(
           public dialogRef: MatDialogRef<ModalComponent>,
           @Inject(MAT_DIALOG_DATA) public data: SequenceModel | number,
-          private graphQLService: GraphQLService
+          private graphQLService: GraphQLService,
+          private toastService: ToastService
     ) {
         super(dialogRef, data);
     }
@@ -44,7 +46,8 @@ export class SequenceComponent extends ModalComponent implements OnInit {
                         this.dialogRef.close();
                     },
                     error => {
-                        console.log(error);
+                        console.error('Error', error);
+                        this.toastService.addToast('Napaka', error.message);
                     }
                 );
         } else {
@@ -56,9 +59,10 @@ export class SequenceComponent extends ModalComponent implements OnInit {
                         this.dialogRef.close(this.sequence);
                     },
                     error => {
-                        console.log(error);
+                        console.error('Error', error);
+                        this.toastService.addToast('Napaka', error.message);
                     }
-                )
+                );
         }
     }
 

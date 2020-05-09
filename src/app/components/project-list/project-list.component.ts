@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ProjectEditComponent} from '../modal/project-edit/project-edit.component';
 import {ConfirmComponent} from '../modal/confirm/confirm.component';
 import {AddProjectComponent} from '../modal/add-project/add-project.component';
+import {ToastService} from '../../services/toast.service';
 
 @Component({
     templateUrl: './project-list.component.html',
@@ -24,6 +25,7 @@ export class ProjectListComponent implements OnInit {
         private graphQLService: GraphQLService,
         private router: Router,
         private changeDetector: ChangeDetectorRef,
+        private toastService: ToastService
     ) {
         // super();
     }
@@ -34,7 +36,6 @@ export class ProjectListComponent implements OnInit {
 
     private getProjects(): void {
         const request: GraphQLRequestModel =  this.graphQLService.GetProjectDataRequest();
-        // console.log(request);
         this.graphQLService.graphQLRequest(request)
             .subscribe(
                 (rsp: any) => {
@@ -42,13 +43,13 @@ export class ProjectListComponent implements OnInit {
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log('in eror: ', error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
 
     public openProject(project: ProjectModel){
-        // console.log('opening: ', project);
         this.router.navigate(['/project/' + project.projectId + '/editor']);
     }
 
@@ -67,7 +68,8 @@ export class ProjectListComponent implements OnInit {
                             this.changeDetector.markForCheck();
                         },
                         error => {
-                            console.log(error);
+                            console.error('Error', error);
+                            this.toastService.addToast('Napaka', error.message);
                         }
                     );
             }

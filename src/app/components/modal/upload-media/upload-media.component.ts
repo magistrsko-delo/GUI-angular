@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core'
 import {ModalComponent} from '../modal.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MediaManagerService} from '../../../services/media-manager.service';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     templateUrl: './upload-media.component.html',
@@ -16,6 +17,7 @@ export class UploadMediaComponent extends ModalComponent implements OnInit {
         public dialogRef: MatDialogRef<ModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private mediaManagerService: MediaManagerService,
+        private toastService: ToastService
     ) {
         super(dialogRef, data);
     }
@@ -31,10 +33,12 @@ export class UploadMediaComponent extends ModalComponent implements OnInit {
         this.mediaManagerService.uploadFile(this.media, this.mediaName, this.siteName)
             .subscribe(
                 (rsp: any) => {
+                    this.toastService.addToast('Uspeh', 'media naložena in poslana v obdelavo');
                     this.dialogRef.close(true);
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }

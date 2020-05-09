@@ -4,6 +4,7 @@ import {ModalComponent} from '../modal.component';
 import {GraphQLService} from '../../../services/graph-ql.service';
 import {MediaModel} from '../../../models/MediaModel';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     templateUrl: './media-edit.component.html',
@@ -16,6 +17,7 @@ export class MediaEditComponent extends ModalComponent implements OnInit {
         public dialogRef: MatDialogRef<ModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: MediaModel,
         private graphqlService: GraphQLService,
+        private toastService: ToastService
     ) {
         super(dialogRef, data);
     }
@@ -33,7 +35,8 @@ export class MediaEditComponent extends ModalComponent implements OnInit {
                     this.dialogRef.close(this.media);
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }

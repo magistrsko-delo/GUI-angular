@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core'
 import {ModalComponent} from '../modal.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ProjectService} from '../../../services/project.service';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     templateUrl: './add-project.component.html',
@@ -14,7 +15,8 @@ export class AddProjectComponent extends ModalComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<ModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private projectService: ProjectService
+        private projectService: ProjectService,
+        private toastService: ToastService,
     ) {
         super(dialogRef, data);
     }
@@ -41,7 +43,8 @@ export class AddProjectComponent extends ModalComponent implements OnInit {
                     this.dialogRef.close(true);
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                     this.dialogRef.close();
                 }
             );

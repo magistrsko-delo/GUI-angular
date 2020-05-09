@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ProjectModel} from '../../../models/ProjectModel';
 import {GraphQLService} from '../../../services/graph-ql.service';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
     templateUrl: './project-edit.component.html',
@@ -18,6 +19,7 @@ export class ProjectEditComponent extends ModalComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: ProjectModel,
         private graphqlService: GraphQLService,
         private changeDetector: ChangeDetectorRef,
+        private toastService: ToastService
     ) {
         super(dialogRef, data);
     }
@@ -35,7 +37,8 @@ export class ProjectEditComponent extends ModalComponent implements OnInit {
                     this.dialogRef.close(this.project);
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }

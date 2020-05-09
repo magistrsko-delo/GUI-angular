@@ -10,6 +10,7 @@ import {environment} from '../../../environments/environment';
 import {ConfirmComponent} from '../modal/confirm/confirm.component';
 import {MediaEditComponent} from '../modal/media-edit/media-edit.component';
 import {UploadMediaComponent} from '../modal/upload-media/upload-media.component';
+import {ToastService} from '../../services/toast.service';
 
 @Component({
     selector: 'app-live-media',
@@ -29,6 +30,7 @@ export class LiveMediaComponent implements OnInit {
         private graphQLService: GraphQLService,
         private mediaManagerService: MediaManagerService,
         private changeDetector: ChangeDetectorRef,
+        private toastService: ToastService,
         public dialog: MatDialog,
     ) { }
 
@@ -81,7 +83,8 @@ export class LiveMediaComponent implements OnInit {
                     this.changeDetector.markForCheck();
                 },
                 error => {
-                    console.log(error);
+                    console.error('Error', error);
+                    this.toastService.addToast('Napaka', error.message);
                 }
             );
     }
@@ -98,7 +101,8 @@ export class LiveMediaComponent implements OnInit {
                             this.getMediasStatusBasedOnStatus(this.selectedOption);
                         },
                         error => {
-                            console.log(error);
+                            console.error('Error', error);
+                            this.toastService.addToast('Napaka', error.message);
                         }
                     );
             }
