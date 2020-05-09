@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 style="padding: 0; margin: 0">Naloži:
+                <input #mp4Input hidden="true" type="file" onclick="this.value=null" (change)="mp4InputChange($event)" accept=".mp4"/>
+                <button mat-flat-button color="primary" (click)="mp4Input.click()">izberi mp4 video</button>
+                <span><small>{{media ? media.name : 'ni izbrana nobena medija'}}</small> </span>
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <mat-form-field class="fullwidth">
+                    <mat-label>Ime medije</mat-label>
+                    <input matInput placeholder="Ime medije" [(ngModel)]="mediaName">
+                </mat-form-field>
+                <mat-form-field class="fullwidth">
+                    <mat-label>Ime strani</mat-label>
+                    <input matInput placeholder="Ime strani" [(ngModel)]="siteName">
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-stroked-button color="primary" (click)="upload()">NALOŽI</button>
+                <div fxFlex></div>
+                <button mat-stroked-button color="warn" (click)="onNoClick()">PREKLIČI</button>
+            </div>
+
+        </div>
+    </div>
+</div>

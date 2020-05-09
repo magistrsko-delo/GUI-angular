@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {ProjectEditComponent} from '../modal/project-edit/project-edit.component';
 import {ConfirmComponent} from '../modal/confirm/confirm.component';
+import {AddProjectComponent} from '../modal/add-project/add-project.component';
 
 @Component({
     templateUrl: './project-list.component.html',
@@ -74,8 +75,16 @@ export class ProjectListComponent implements OnInit {
     }
 
     public addProject(){
-        // TODO
-        console.log('adding project');
+        this.dialog.open(AddProjectComponent, {
+            width: '500px',
+            data: null
+        }).afterClosed().subscribe(
+            result => {
+                if (result) {
+                    this.getProjects();
+                }
+            }
+        );
     }
 
     editProject(project: ProjectModel, index: number) {

@@ -22,6 +22,9 @@ import { ConfirmComponent } from './components/modal/confirm/confirm.component';
 import { MediaEditComponent } from './components/modal/media-edit/media-edit.component';
 import { SequenceComponent } from './components/modal/sequence/sequence.component';
 import { PublishSequenceComponent } from './components/modal/publish-sequence/publish-sequence.component';
+import { LiveMediaComponent } from './components/live-media/live-media.component';
+import { UploadMediaComponent } from './components/modal/upload-media/upload-media.component';
+import { AddProjectComponent } from './components/modal/add-project/add-project.component';
 
 @NgModule({
     declarations: [
@@ -36,7 +39,10 @@ import { PublishSequenceComponent } from './components/modal/publish-sequence/pu
         ConfirmComponent,
         MediaEditComponent,
         SequenceComponent,
-        PublishSequenceComponent
+        PublishSequenceComponent,
+        LiveMediaComponent,
+        UploadMediaComponent,
+        AddProjectComponent
     ],
     imports: [
         BrowserModule,

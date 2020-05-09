@@ -1,0 +1,65 @@
+<div class="container-fluid" cdkDropListGroup>
+    <div class="row">
+        <div class="col-8">
+            <mat-toolbar>
+                <mat-toolbar-row>
+                    <span>LIVE</span>
+                </mat-toolbar-row>
+            </mat-toolbar>
+            <app-player
+                [currentStream]="currentStream"
+            ></app-player>
+            <div class="row" style="margin-top: .5em">
+                <div class="col-6" style="margin-top: 1.5em">
+                    <div *ngIf="currentMediaPlay" class="containerMedia">
+                        <img class="containerMedia__image" [src]=" currentMediaPlay.thumbnail && currentMediaPlay.thumbnail !== '' ? mediaManagerUrl + currentMediaPlay.thumbnail : ''">
+                        <div class="containerMedia__text">
+                            <mat-card-title>{{currentMediaPlay.name}}</mat-card-title>
+                            <mat-card-subtitle>id: {{currentMediaPlay.mediaId}}, projectId: {{currentMediaPlay.projectId}}, status: {{currentMediaPlay.status}}</mat-card-subtitle>
+                            <mat-card-subtitle>siteName: {{currentMediaPlay.siteName}}</mat-card-subtitle>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <mat-tab-group (selectedIndexChange)="tabEvent($event)" mat-stretch-tabs>
+                <mat-tab label="ISKANJE">
+                    <ng-template matTabContent>
+                        <div>
+                            <mat-form-field class="fullwidth">
+                                <mat-label>izberi tiš medije</mat-label>
+                                <mat-select [(ngModel)]="selectedOption" (selectionChange)="searchNewMedia($event)">
+                                    <mat-option [value]="3">OBJAVLJENA</mat-option>
+                                    <mat-option [value]="1">PROCESIRANJE</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div #mediaSearchList
+                             cdkDropList
+                             cdkDropListSortingDisabled
+                             style="height: 600px; overflow: scroll;">
+
+                            <app-media-card *ngFor="let media of mediaSearchArray index as i"
+                                            (mediaForPlayEvent)="playOneMedia($event, i, 'search')"
+                                            (deleteMediaEvent)="deleteMedia()"
+                                            [media]="media"
+                                            [canDelete]="true"
+                                            (dblclick)="editMedia(media, i, 'search')"
+                            >
+                                <div *cdkDragPlaceholder></div>
+                            </app-media-card>
+                        </div>
+                        <button mat-stroked-button (click)="addMedia()" color="primary" class="fullwidth"><mat-icon>cloud_upload</mat-icon></button>
+                    </ng-template>
+
+                </mat-tab>
+
+            </mat-tab-group>
+        </div>
+    </div>
+
+    <div class="row">
+    </div>
+</div>

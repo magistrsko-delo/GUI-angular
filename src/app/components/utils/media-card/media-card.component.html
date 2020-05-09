@@ -8,8 +8,16 @@
                 <mat-card-subtitle>siteName: {{media.siteName}}</mat-card-subtitle>
             </div>
             <div fxFlex=""></div>
-            <div *ngIf="!isSequenceMedia && media.status === 3" fxLayoutAlign="center center">
-                <button (click)="playMedia()" mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
+            <div *ngIf="!isSequenceMedia && media.status === 3" style="text-align: center">
+                <div>
+                    <button (click)="playMedia()" mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>play_arrow</mat-icon></button>
+                </div>
+                <div *ngIf="canDelete" style="margin-top: 1em">
+                    <button (click)="download()" mat-mini-fab color="primary" style="margin-left: 1em;"><mat-icon>cloud_download</mat-icon></button>
+                </div>
+                <div *ngIf="canDelete" style="margin-top: 1em">
+                    <button (click)="deleteMedia()" mat-mini-fab color="warn" style="margin-left: 1em;"><mat-icon>delete</mat-icon></button>
+                </div>
             </div>
         </div>
     </mat-card-content>
