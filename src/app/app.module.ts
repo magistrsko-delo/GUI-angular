@@ -24,6 +24,7 @@ import { PublishSequenceComponent } from './components/modal/publish-sequence/pu
 import { LiveMediaComponent } from './components/live-media/live-media.component';
 import { UploadMediaComponent } from './components/modal/upload-media/upload-media.component';
 import { AddProjectComponent } from './components/modal/add-project/add-project.component';
+import { AppLoaderComponent } from './components/utils/app-loader/app-loader.component';
 
 @NgModule({
     declarations: [
@@ -40,7 +41,8 @@ import { AddProjectComponent } from './components/modal/add-project/add-project.
         PublishSequenceComponent,
         LiveMediaComponent,
         UploadMediaComponent,
-        AddProjectComponent
+        AddProjectComponent,
+        AppLoaderComponent
     ],
     imports: [
         BrowserModule,

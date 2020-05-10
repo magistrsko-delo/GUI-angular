@@ -28,6 +28,7 @@ export class LiveMediaComponent extends MainComponent implements OnInit {
     selectedOption = 3;
     mediaSearchArray: Array<MediaModel>;
 
+    isMediaLoading: boolean;
     constructor(
         private graphQLService: GraphQLService,
         private mediaManagerService: MediaManagerService,
@@ -39,6 +40,7 @@ export class LiveMediaComponent extends MainComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.isMediaLoading = true;
         this.getMediasStatusBasedOnStatus(3);
     }
 
@@ -87,9 +89,11 @@ export class LiveMediaComponent extends MainComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.mediaSearchArray = rsp.searchMedias.map(media => new MediaModel(media));
+                    this.isMediaLoading = false;
                     this.changeDetector.markForCheck();
                 },
                 error => {
+                    this.isMediaLoading = false;
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
                 }
@@ -104,15 +108,23 @@ export class LiveMediaComponent extends MainComponent implements OnInit {
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(result => {
             if (result) {
+                this.isMediaLoading = true;
+                this.changeDetector.markForCheck();
                 this.mediaManagerService.deleteMedia(media.mediaId)
                     .pipe(takeUntil(this.ngUnsubscribe))
                     .subscribe(
                         (rsp: boolean) => {
+                            if (media.mediaId === this.currentMediaPlay.mediaId) {
+                                this.currentMediaPlay = null;
+                                this.currentStream = null;
+                            }
                             this.getMediasStatusBasedOnStatus(this.selectedOption);
+                            this.changeDetector.markForCheck();
                         },
                         error => {
                             console.error('Error', error);
                             this.toastService.addToast('Napaka', error.message);
+                            this.changeDetector.markForCheck();
                         }
                     );
             }
@@ -127,7 +139,9 @@ export class LiveMediaComponent extends MainComponent implements OnInit {
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(result => {
             if (result) {
+                this.isMediaLoading = true;
                 this.getMediasStatusBasedOnStatus(this.selectedOption);
+                this.changeDetector.markForCheck();
             }
         });
     }

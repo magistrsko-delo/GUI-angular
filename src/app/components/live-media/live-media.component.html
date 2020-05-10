@@ -35,11 +35,13 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-
-                        <div #mediaSearchList
-                             cdkDropList
-                             cdkDropListSortingDisabled
-                             style="height: 600px; overflow: scroll;">
+                        <app-loader [loading]="isMediaLoading"></app-loader>
+                        <div
+                            *ngIf="!isMediaLoading"
+                            #mediaSearchList
+                            cdkDropList
+                            cdkDropListSortingDisabled
+                            style="height: 600px; overflow: scroll;">
 
                             <app-media-card *ngFor="let media of mediaSearchArray index as i"
                                             (mediaForPlayEvent)="playOneMedia($event, i, 'search')"

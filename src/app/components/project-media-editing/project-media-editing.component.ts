@@ -55,6 +55,14 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
     @ViewChild('mediaSearchList', {read: ElementRef}) mediaSearchListVar: ElementRef;
     @ViewChild('mediaProjectList', {read: ElementRef}) mediaProjectListVar: ElementRef;
     mediaDrag: MediaModel;
+
+    /*
+    * loading
+    * */
+    isMediaLoading: boolean;
+    isProjectMediaLoading: boolean;
+    isSequencesLoading: boolean;
+    isSequenceMediaLoading: boolean;
     constructor(
         private graphQLService: GraphQLService,
         private mediaManagerService: MediaManagerService,
@@ -69,6 +77,10 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
     }
 
     ngOnInit(): void {
+        this.isMediaLoading = true;
+        this.isProjectMediaLoading = true;
+        this.isSequencesLoading = true;
+        this.isSequenceMediaLoading = true;
         this.route.paramMap.subscribe(
             params => {
                 this.currentProjectId = Number(params.get('projectId'));
@@ -80,16 +92,22 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
 
     tabEvent(tabIndex: number): void {
         if (tabIndex === 1) {
+            // this.isProjectMediaLoading = true;
+            // this.isSequencesLoading = true;
             this.getProjectMedias();
             this.getProjectSequencesRequest();
         } else {
+            // this.isMediaLoading = true;
             this.getMediasStatusBasedOnStatus(this.selectedOption);
         }
+        this.changeDetector.markForCheck();
     }
 
     searchNewMedia($event: MatSelectChange): void {
         this.selectedOption = $event.value;
+        this.isMediaLoading = true;
         this.getMediasStatusBasedOnStatus($event.value);
+        this.changeDetector.markForCheck();
     }
 
     private getMediasStatusBasedOnStatus(status: number): void {
@@ -102,11 +120,14 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                     if (this.currentMediaPlay && this.type === 'search') {
                         this.currentMediaPlay = this.mediaSearchArray[this.selectedIndex];
                     }
+                    this.isMediaLoading = false;
                     this.changeDetector.markForCheck();
                 },
                 error => {
+                    this.isMediaLoading = false;
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -123,6 +144,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                 error => {
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -137,11 +159,14 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                     if (this.currentMediaPlay && this.type === 'project') {
                         this.currentMediaPlay = this.projectMedias[this.selectedIndex];
                     }
+                    this.isProjectMediaLoading = false;
                     this.changeDetector.markForCheck();
                 },
                 error => {
+                    this.isProjectMediaLoading = false;
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -153,11 +178,14 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             .subscribe(
                 (rsp: any) => {
                     this.projectSequences = rsp.getProjectSequences.map(sequenceData => new SequenceModel(sequenceData));
+                    this.isSequencesLoading = false;
                     this.changeDetector.markForCheck();
                 },
                 error => {
+                    this.isSequencesLoading = false;
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -173,6 +201,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             poster: this.currentMediaPlay.thumbnail && this.currentMediaPlay.thumbnail !== ''
                 ? this.mediaManagerUrl + this.currentMediaPlay.thumbnail + '?isImage=true' : '',
         });
+        this.changeDetector.markForCheck();
     }
 
     playSeqeunce(sequence: SequenceModel) {
@@ -184,6 +213,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             poster: sequence.thumbnail && sequence.thumbnail !== ''
                 ? this.mediaManagerUrl + sequence.thumbnail + '?isImage=true' : '',
         });
+        this.changeDetector.markForCheck();
     }
 
     addInCutPoint() {
@@ -203,11 +233,14 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             .subscribe(
                 (rsp: any) => {
                     this.currentSequence = new SequenceMediaModel(rsp.getSequenceMedias);
+                    this.isSequenceMediaLoading = false;
                     this.changeDetector.markForCheck();
                 },
                 error => {
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.isSequenceMediaLoading = false;
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -231,18 +264,23 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
     }
 
     private manageMediaInSequence(sequenceId: number, mediaId: number, isDelete: boolean = false, isAdd: boolean = false): void {
+        this.changeDetector.markForCheck();
         const request: GraphQLRequestModel = this.graphQLService.ManageMediaInSequence(sequenceId, mediaId, isDelete, isAdd);
         this.graphQLService.graphQLRequest(request)
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.currentSequence = new SequenceMediaModel(rsp.manageMediaInSequence);
+                    this.isSequenceMediaLoading = false;
+                    this.isSequencesLoading = true;
                     this.getProjectSequencesRequest();
                     this.changeDetector.markForCheck();
                 },
                 error => {
+                    this.isSequenceMediaLoading = false;
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -250,6 +288,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
     deleteLastMediaFromSequence() {
         const mediaId: number = this.currentSequence.Medias[this.currentSequence.Medias.length - 1].mediaId;
         this.manageMediaInSequence(this.currentSequence.sequence.sequenceId, mediaId, true, false);
+        this.changeDetector.markForCheck();
     }
 
     checkIfDraggable(media: MediaModel): boolean {
@@ -271,9 +310,11 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                 if (result) {
                     if (search === 'search') {
                         this.mediaSearchArray[i] = media;
+                        this.isMediaLoading = true;
                         this.getMediasStatusBasedOnStatus(this.selectedOption);
                     } else {
                         this.projectMedias[i] = media;
+                        this.isProjectMediaLoading = true;
                         this.getProjectMedias();
                     }
                     this.changeDetector.markForCheck();
@@ -289,7 +330,9 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
         }).afterClosed()
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(result => {
-            this.getProjectSequencesRequest();
+                this.isSequencesLoading = true;
+                this.getProjectSequencesRequest();
+                this.changeDetector.markForCheck();
         });
     }
 
@@ -300,10 +343,13 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
         }).afterClosed()
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(result => {
-            this.getProjectSequencesRequest();
-            if (sequence.sequenceId === this.currentSequence.sequence.sequenceId) {
-                this.getCurrentSequenceMedias(sequence.sequenceId);
-            }
+                this.isSequencesLoading = true;
+                this.getProjectSequencesRequest();
+                if (sequence.sequenceId === this.currentSequence.sequence.sequenceId) {
+                    this.isSequenceMediaLoading = true;
+                    this.getCurrentSequenceMedias(sequence.sequenceId);
+                }
+                this.changeDetector.markForCheck();
         });
     }
 
@@ -330,6 +376,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                         error => {
                             console.error('Error', error);
                             this.toastService.addToast('Napaka', error.message);
+                            this.changeDetector.markForCheck();
                         }
                     );
             }
@@ -343,6 +390,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             this.currentStreamOutTime < this.currentStreamInTime
         ) {
             this.toastService.addToast('Napaka', 'nepravilni vnosni podatki za rezanje videa');
+            this.changeDetector.markForCheck();
             return;
         }
 
@@ -355,13 +403,16 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
+                    this.isProjectMediaLoading = true;
                     this.getProjectMedias();
                     this.currentStreamInTime = null;
                     this.currentStreamOutTime = null;
+                    this.changeDetector.markForCheck();
                 },
                 error =>  {
                     console.error('Error', error);
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -376,8 +427,10 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             result => {
                 if (result) {
                     this.currentSequence = null;
+                    this.isSequencesLoading = true;
                     this.getProjectSequencesRequest();
                     this.currentSequence = null;
+                    this.changeDetector.markForCheck();
                 }
             }
         );
@@ -398,14 +451,18 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                         (rsp: boolean) => {
                             this.toastService.addToast('Uspeh', 'Slika medije poslana v obdelavo');
                             const intervalListener = setInterval(() => {
+                                this.isMediaLoading = true;
                                 this.getMediasStatusBasedOnStatus(this.selectedOption);
+                                this.isProjectMediaLoading = true;
                                 this.getProjectMedias();
+                                this.changeDetector.markForCheck();
                                 window.clearInterval(intervalListener);
                             }, 5000);
                         },
                         error => {
                             console.error('Error', error);
                             this.toastService.addToast('Napaka', error.message);
+                            this.changeDetector.markForCheck();
                         }
                     );
             }
@@ -420,6 +477,8 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(result => {
             if (result) {
+                this.isProjectMediaLoading = true;
+                this.changeDetector.markForCheck();
                 this.mediaManagerService.deleteMedia(media.mediaId)
                     .pipe(takeUntil(this.ngUnsubscribe))
                     .subscribe(
@@ -429,6 +488,7 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
                         error => {
                             console.error('Error', error);
                             this.toastService.addToast('Napaka', error.message);
+                            this.changeDetector.markForCheck();
                         }
                     );
             }

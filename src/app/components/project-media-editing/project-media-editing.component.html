@@ -67,7 +67,10 @@
                             </mat-form-field>
                         </div>
 
-                        <div #mediaSearchList
+                        <app-loader [loading]="isMediaLoading"></app-loader>
+                        <div
+                            *ngIf="!isMediaLoading"
+                            #mediaSearchList
                             cdkDropList
                              cdkDropListSortingDisabled
                              style="height: 600px; overflow: scroll;">
@@ -92,8 +95,9 @@
                 <mat-tab label="PROJEKT">
                     <ng-template matTabContent>
                         <mat-toolbar style="height: 2em">Posnetki projekta</mat-toolbar>
-
+                        <app-loader [loading]="isProjectMediaLoading"></app-loader>
                         <div
+                            *ngIf="!isProjectMediaLoading"
                             #mediaProjectList
                             cdkDropList
                             cdkDropListSortingDisabled
@@ -124,7 +128,8 @@
                             <div fxFlex=""></div>
                             <button mat-raised-button color="primary" (click)="createSequence()">Dodaj</button>
                         </mat-toolbar>
-                        <div style="height: 300px; overflow-y: scroll;">
+                        <app-loader [loading]="isSequencesLoading"></app-loader>
+                        <div style="height: 300px; overflow-y: scroll;" *ngIf="!isSequencesLoading">
                             <ng-container *ngFor="let sequence of projectSequences">
                                 <app-sequence-card
                                     style="cursor: alias"
@@ -151,8 +156,9 @@
                 <button mat-raised-button color="primary" (click)="publishSequence()">OBJAVI</button>
                 <button mat-raised-button color="warn" (click)="deleteSequence()">IZBRIŠI</button>
             </mat-toolbar>
-
+            <app-loader [loading]="isSequenceMediaLoading"></app-loader>
             <div class="scrolling-wrapper-flexbox"
+                 *ngIf="!isSequenceMediaLoading"
                  [style]="{'opacity': dragDropService.getDragEnteredScope() === 'media' ? 0.5: 1.0,
                             'border': dragDropService.dragScope === 'media' ? '2px dotted green': ''}"
                  cdkDropList

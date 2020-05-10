@@ -21,6 +21,7 @@ export class ProjectListComponent extends MainComponent implements OnInit {
 
     projectArray: Array<ProjectModel> = [];
     mediaManagerUrl: string = environment.mediaManagerUrl;
+    isLoading: boolean;
 
     constructor(
         public dialog: MatDialog,
@@ -33,6 +34,7 @@ export class ProjectListComponent extends MainComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.isLoading = true;
         this.getProjects();
     }
 
@@ -43,11 +45,14 @@ export class ProjectListComponent extends MainComponent implements OnInit {
             .subscribe(
                 (rsp: any) => {
                     this.projectArray = rsp.projectsMetadata.map(project => new ProjectModel(project));
+                    this.isLoading = false;
                     this.changeDetector.markForCheck();
                 },
                 error => {
                     console.error('Error', error);
+                    this.isLoading = false;
                     this.toastService.addToast('Napaka', error.message);
+                    this.changeDetector.markForCheck();
                 }
             );
     }
@@ -90,6 +95,7 @@ export class ProjectListComponent extends MainComponent implements OnInit {
             .subscribe(
             result => {
                 if (result) {
+                    this.isLoading = true;
                     this.getProjects();
                 }
             }
