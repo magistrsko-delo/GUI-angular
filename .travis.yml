@@ -20,7 +20,7 @@ branches:
 
 env:
   global:
-    - DOCKER_IMAGE=mag20/node-graphql
+    - DOCKER_IMAGE=mag20/app-gui
     - DOCKER_TAG=$TRAVIS_JOB_NUMBER
 
 jobs:
