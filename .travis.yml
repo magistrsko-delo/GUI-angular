@@ -5,9 +5,7 @@ services:
 
 language: node_js
 node_js:
-  - 10.9
-python:
-  - "3.4"
+  - 12.16
 
 dist: trusty
 
@@ -26,7 +24,11 @@ env:
 jobs:
   include:
     - stage: docker build
+      before_script:
+          - npm install -g @angular/cli
       script:
+        - ng lint
+        - npm run build
         - docker build -t "$DOCKER_IMAGE":latest .
       after_success:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
