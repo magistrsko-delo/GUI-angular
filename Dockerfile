@@ -1,6 +1,7 @@
 ### STAGE 1: Build ###
-FROM node:12.16-alpine AS build
+FROM node:10.20-slim AS build
 WORKDIR /usr/src/app
+RUN npm install -g @angular/cli
 COPY package.json ./
 RUN npm install
 COPY . .
