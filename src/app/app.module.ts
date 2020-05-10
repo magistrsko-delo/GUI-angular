@@ -16,7 +16,6 @@ import { Page404Component } from './components/page404/page404.component';
 import { ProjectMediaEditingComponent } from './components/project-media-editing/project-media-editing.component';
 import { MediaCardComponent } from './components/utils/media-card/media-card.component';
 import { SequenceCardComponent } from './components/utils/sequence-card/sequence-card.component';
-import { MainComponent } from './components/main.component';
 import { ProjectEditComponent } from './components/modal/project-edit/project-edit.component';
 import { ConfirmComponent } from './components/modal/confirm/confirm.component';
 import { MediaEditComponent } from './components/modal/media-edit/media-edit.component';
@@ -34,7 +33,6 @@ import { AddProjectComponent } from './components/modal/add-project/add-project.
         ProjectMediaEditingComponent,
         MediaCardComponent,
         SequenceCardComponent,
-        MainComponent,
         ProjectEditComponent,
         ConfirmComponent,
         MediaEditComponent,

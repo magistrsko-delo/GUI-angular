@@ -5,6 +5,7 @@ import {ProjectModel} from '../../../models/ProjectModel';
 import {GraphQLService} from '../../../services/graph-ql.service';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
 import {ToastService} from '../../../services/toast.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './project-edit.component.html',
@@ -31,6 +32,7 @@ export class ProjectEditComponent extends ModalComponent implements OnInit {
     updateProject() {
         const request: GraphQLRequestModel = this.graphqlService.ProjectUpdateMutation(this.project);
         this.graphqlService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.project = new ProjectModel(rsp.updateProjectMetadata);

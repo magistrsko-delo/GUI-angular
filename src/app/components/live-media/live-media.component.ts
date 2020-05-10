@@ -11,6 +11,8 @@ import {ConfirmComponent} from '../modal/confirm/confirm.component';
 import {MediaEditComponent} from '../modal/media-edit/media-edit.component';
 import {UploadMediaComponent} from '../modal/upload-media/upload-media.component';
 import {ToastService} from '../../services/toast.service';
+import {MainComponent} from '../main.component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-live-media',
@@ -18,7 +20,7 @@ import {ToastService} from '../../services/toast.service';
     styleUrls: ['./live-media.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LiveMediaComponent implements OnInit {
+export class LiveMediaComponent extends MainComponent implements OnInit {
     currentStream: IMediaStream = null;
     currentMediaPlay: MediaModel;
     mediaManagerUrl: string = environment.mediaManagerUrl;
@@ -32,7 +34,9 @@ export class LiveMediaComponent implements OnInit {
         private changeDetector: ChangeDetectorRef,
         private toastService: ToastService,
         public dialog: MatDialog,
-    ) { }
+    ) {
+        super();
+    }
 
     ngOnInit(): void {
         this.getMediasStatusBasedOnStatus(3);
@@ -50,7 +54,9 @@ export class LiveMediaComponent implements OnInit {
         this.dialog.open(MediaEditComponent, {
             width: '500px',
             data: media
-        }).afterClosed().subscribe(
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(
             result => {
                 if (result) {
                     if (search === 'search') {
@@ -77,6 +83,7 @@ export class LiveMediaComponent implements OnInit {
     private getMediasStatusBasedOnStatus(status: number): void {
         const request: GraphQLRequestModel =  this.graphQLService.SearchMediaStatus(status);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.mediaSearchArray = rsp.searchMedias.map(media => new MediaModel(media));
@@ -93,9 +100,12 @@ export class LiveMediaComponent implements OnInit {
         this.dialog.open(ConfirmComponent, {
             width: '300px',
             data: 'Želite izbrisati medio ' + media.name + '?'
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 this.mediaManagerService.deleteMedia(media.mediaId)
+                    .pipe(takeUntil(this.ngUnsubscribe))
                     .subscribe(
                         (rsp: boolean) => {
                             this.getMediasStatusBasedOnStatus(this.selectedOption);
@@ -113,7 +123,9 @@ export class LiveMediaComponent implements OnInit {
         this.dialog.open(UploadMediaComponent, {
             width: '500px',
             data: null
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 this.getMediasStatusBasedOnStatus(this.selectedOption);
             }

@@ -9,13 +9,15 @@ import {ProjectEditComponent} from '../modal/project-edit/project-edit.component
 import {ConfirmComponent} from '../modal/confirm/confirm.component';
 import {AddProjectComponent} from '../modal/add-project/add-project.component';
 import {ToastService} from '../../services/toast.service';
+import {MainComponent} from '../main.component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './project-list.component.html',
     styleUrls: ['./project-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent extends MainComponent implements OnInit {
 
     projectArray: Array<ProjectModel> = [];
     mediaManagerUrl: string = environment.mediaManagerUrl;
@@ -27,7 +29,7 @@ export class ProjectListComponent implements OnInit {
         private changeDetector: ChangeDetectorRef,
         private toastService: ToastService
     ) {
-        // super();
+        super();
     }
 
     ngOnInit(): void {
@@ -37,6 +39,7 @@ export class ProjectListComponent implements OnInit {
     private getProjects(): void {
         const request: GraphQLRequestModel =  this.graphQLService.GetProjectDataRequest();
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.projectArray = rsp.projectsMetadata.map(project => new ProjectModel(project));
@@ -57,7 +60,9 @@ export class ProjectListComponent implements OnInit {
         this.dialog.open(ConfirmComponent, {
             width: '300px',
             data: 'Želite izbrisati projekt?'
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 const request: GraphQLRequestModel = this.graphQLService.DeleteProjectMutation(project.projectId);
                 this.graphQLService.graphQLRequest(request)
@@ -80,7 +85,9 @@ export class ProjectListComponent implements OnInit {
         this.dialog.open(AddProjectComponent, {
             width: '500px',
             data: null
-        }).afterClosed().subscribe(
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(
             result => {
                 if (result) {
                     this.getProjects();
@@ -93,7 +100,9 @@ export class ProjectListComponent implements OnInit {
         this.dialog.open(ProjectEditComponent, {
             width: '500px',
             data: project
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 this.projectArray[index] = result;
                 this.changeDetector.markForCheck();

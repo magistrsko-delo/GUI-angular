@@ -3,6 +3,7 @@ import {ModalComponent} from '../modal.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ProjectService} from '../../../services/project.service';
 import {ToastService} from '../../../services/toast.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './add-project.component.html',
@@ -38,6 +39,7 @@ export class AddProjectComponent extends ModalComponent implements OnInit {
             return;
         }
         this.projectService.createProject(this.media, this.projectName)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.dialogRef.close(true);

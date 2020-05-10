@@ -3,6 +3,7 @@ import {ModalComponent} from '../modal.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MediaManagerService} from '../../../services/media-manager.service';
 import {ToastService} from '../../../services/toast.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './upload-media.component.html',
@@ -31,6 +32,7 @@ export class UploadMediaComponent extends ModalComponent implements OnInit {
             return;
         }
         this.mediaManagerService.uploadFile(this.media, this.mediaName, this.siteName)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.toastService.addToast('Uspeh', 'media naložena in poslana v obdelavo');

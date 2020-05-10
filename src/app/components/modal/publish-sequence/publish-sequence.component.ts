@@ -5,6 +5,7 @@ import {SequenceModel} from '../../../models/SequenceModels';
 import {GraphQLService} from '../../../services/graph-ql.service';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
 import {ToastService} from '../../../services/toast.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './publish-sequence.component.html',
@@ -31,6 +32,7 @@ export class PublishSequenceComponent extends ModalComponent implements OnInit {
         const request: GraphQLRequestModel = this.graphQLService.PublishSequence(
             this.sequence.sequenceId, this.newMediaName, this.newMediaSiteName);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.dialogRef.close(true);

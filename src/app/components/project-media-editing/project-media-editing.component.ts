@@ -18,6 +18,8 @@ import {ConfirmComponent} from '../modal/confirm/confirm.component';
 import {PublishSequenceComponent} from '../modal/publish-sequence/publish-sequence.component';
 import {MediaManagerService} from '../../services/media-manager.service';
 import {ToastService} from '../../services/toast.service';
+import {MainComponent} from '../main.component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-project-media-editing',
@@ -25,7 +27,7 @@ import {ToastService} from '../../services/toast.service';
     styleUrls: ['./project-media-editing.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectMediaEditingComponent implements OnInit {
+export class ProjectMediaEditingComponent extends MainComponent implements OnInit {
     currentProjectId = -1;
     currentProject: ProjectModel;
     mediaManagerUrl: string = environment.mediaManagerUrl;
@@ -63,7 +65,7 @@ export class ProjectMediaEditingComponent implements OnInit {
         public dragDropService: DragDropService,
         public dialog: MatDialog,
     ) {
-        // super();
+        super();
     }
 
     ngOnInit(): void {
@@ -93,6 +95,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     private getMediasStatusBasedOnStatus(status: number): void {
         const request: GraphQLRequestModel =  this.graphQLService.SearchMediaStatus(status);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.mediaSearchArray = rsp.searchMedias.map(media => new MediaModel(media));
@@ -111,6 +114,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     private getCurrentProjectData(): void {
         const request: GraphQLRequestModel = this.graphQLService.GetOneProjectDataRequest(this.currentProjectId);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.currentProject = new ProjectModel(rsp.oneProjectMetadata);
@@ -126,6 +130,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     private getProjectMedias(): void {
         const request: GraphQLRequestModel =  this.graphQLService.GetProjectMedias(this.currentProjectId);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.projectMedias = rsp.searchMedias.map(media => new MediaModel(media));
@@ -144,6 +149,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     private getProjectSequencesRequest(): void {
         const request: GraphQLRequestModel = this.graphQLService.GetProjectSequences(this.currentProjectId);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.projectSequences = rsp.getProjectSequences.map(sequenceData => new SequenceModel(sequenceData));
@@ -193,6 +199,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     getCurrentSequenceMedias(sequenceId: number) {
         const request: GraphQLRequestModel = this.graphQLService.GetSequenceMedias(sequenceId);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.currentSequence = new SequenceMediaModel(rsp.getSequenceMedias);
@@ -226,6 +233,7 @@ export class ProjectMediaEditingComponent implements OnInit {
     private manageMediaInSequence(sequenceId: number, mediaId: number, isDelete: boolean = false, isAdd: boolean = false): void {
         const request: GraphQLRequestModel = this.graphQLService.ManageMediaInSequence(sequenceId, mediaId, isDelete, isAdd);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.currentSequence = new SequenceMediaModel(rsp.manageMediaInSequence);
@@ -256,7 +264,9 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(MediaEditComponent, {
             width: '500px',
             data: media
-        }).afterClosed().subscribe(
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(
             result => {
                 if (result) {
                     if (search === 'search') {
@@ -276,7 +286,9 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(SequenceComponent, {
             width: '500px',
             data: this.currentProjectId
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             this.getProjectSequencesRequest();
         });
     }
@@ -285,7 +297,9 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(SequenceComponent, {
             width: '500px',
             data: sequence
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             this.getProjectSequencesRequest();
             if (sequence.sequenceId === this.currentSequence.sequence.sequenceId) {
                 this.getCurrentSequenceMedias(sequence.sequenceId);
@@ -297,12 +311,15 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(ConfirmComponent, {
             width: '300px',
             data: 'Želite izbrisati sekvenco?'
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 const request: GraphQLRequestModel = this.graphQLService.DeleteSequenceMutation(
                     this.currentProjectId,
                     this.currentSequence.sequence.sequenceId);
                 this.graphQLService.graphQLRequest(request)
+                    .pipe(takeUntil(this.ngUnsubscribe))
                     .subscribe(
                         (rsp: any) => {
                             this.projectSequences = rsp.deleteSequence.map(seq => new SequenceModel(seq));
@@ -335,6 +352,7 @@ export class ProjectMediaEditingComponent implements OnInit {
             this.currentProjectId,
             this.currentMediaPlay.mediaId);
         this.graphQLService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.getProjectMedias();
@@ -352,7 +370,9 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(PublishSequenceComponent, {
             width: '500px',
             data: this.currentSequence.sequence
-        }).afterClosed().subscribe(
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(
             result => {
                 if (result) {
                     this.currentSequence = null;
@@ -368,9 +388,12 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(ConfirmComponent, {
             width: '500px',
             data: 'Želite vzeti zaslonski posnetek medie: ' + this.currentMediaPlay.name + '  ob času: ' + time
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 this.mediaManagerService.createMediaImage(this.currentMediaPlay.mediaId, time)
+                    .pipe(takeUntil(this.ngUnsubscribe))
                     .subscribe(
                         (rsp: boolean) => {
                             this.toastService.addToast('Uspeh', 'Slika medije poslana v obdelavo');
@@ -393,9 +416,12 @@ export class ProjectMediaEditingComponent implements OnInit {
         this.dialog.open(ConfirmComponent, {
             width: '300px',
             data: 'Želite izbrisati medio ' + media.name + '?'
-        }).afterClosed().subscribe(result => {
+        }).afterClosed()
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe(result => {
             if (result) {
                 this.mediaManagerService.deleteMedia(media.mediaId)
+                    .pipe(takeUntil(this.ngUnsubscribe))
                     .subscribe(
                         (rsp: boolean) => {
                             this.getProjectMedias();

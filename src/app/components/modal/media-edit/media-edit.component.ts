@@ -5,6 +5,7 @@ import {GraphQLService} from '../../../services/graph-ql.service';
 import {MediaModel} from '../../../models/MediaModel';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
 import {ToastService} from '../../../services/toast.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './media-edit.component.html',
@@ -29,6 +30,7 @@ export class MediaEditComponent extends ModalComponent implements OnInit {
     updateMediaReq() {
         const request: GraphQLRequestModel = this.graphqlService.MediaUpdateMutation(this.media);
         this.graphqlService.graphQLRequest(request)
+            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
                 (rsp: any) => {
                     this.media = new MediaModel(rsp.updateMedia[0]);

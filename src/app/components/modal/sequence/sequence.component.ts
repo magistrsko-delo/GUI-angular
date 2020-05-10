@@ -5,6 +5,7 @@ import {SequenceModel} from '../../../models/SequenceModels';
 import {GraphQLService} from '../../../services/graph-ql.service';
 import {GraphQLRequestModel} from '../../../models/GraphQLRequest-model';
 import {ToastService} from '../../../services/toast.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './sequence.component.html',
@@ -41,6 +42,7 @@ export class SequenceComponent extends ModalComponent implements OnInit {
         if (this.isNew) {
             request = this.graphQLService.CreateSequence(this.sequence);
             this.graphQLService.graphQLRequest(request)
+                .pipe(takeUntil(this.ngUnsubscribe))
                 .subscribe(
                     (rsp: any) => {
                         this.dialogRef.close();
@@ -53,6 +55,7 @@ export class SequenceComponent extends ModalComponent implements OnInit {
         } else {
             request = this.graphQLService.UpdateSequence(this.sequence);
             this.graphQLService.graphQLRequest(request)
+                .pipe(takeUntil(this.ngUnsubscribe))
                 .subscribe(
                     (rsp: any) => {
                         this.sequence = rsp.updateSequence;

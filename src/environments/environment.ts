@@ -4,10 +4,10 @@
 
 export const environment = {
     production: false,
-    graphql: 'http://193.77.83.215:3000/graphql',
-    mediaManagerUrl: 'http://193.77.83.215:8003/',
-    hlsStreamUrl: 'http://193.77.83.215:8006/',
-    projectUrl: 'http://193.77.83.215:8007/'
+    graphql: 'http://192.168.1.8:3000/graphql',
+    mediaManagerUrl: 'http://192.168.1.8:8003/',
+    hlsStreamUrl: 'http://192.168.1.8:8006/',
+    projectUrl: 'http://192.168.1.8:8007/'
 };
 
 /*
