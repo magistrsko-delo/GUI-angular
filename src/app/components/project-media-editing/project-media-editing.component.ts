@@ -394,27 +394,38 @@ export class ProjectMediaEditingComponent extends MainComponent implements OnIni
             return;
         }
 
-        const request: GraphQLRequestModel = this.graphQLService.CutMedia(
-            Number(this.currentStreamInTime),
-            Number(this.currentStreamOutTime),
-            this.currentProjectId,
-            this.currentMediaPlay.mediaId);
-        this.graphQLService.graphQLRequest(request)
+        this.dialog.open(ConfirmComponent, {
+            width: '300px',
+            data: 'Želite razrezati video'
+        }).afterClosed()
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(
-                (rsp: any) => {
-                    this.isProjectMediaLoading = true;
-                    this.getProjectMedias();
-                    this.currentStreamInTime = null;
-                    this.currentStreamOutTime = null;
-                    this.changeDetector.markForCheck();
-                },
-                error =>  {
-                    console.error('Error', error);
-                    this.toastService.addToast('Napaka', error.message);
-                    this.changeDetector.markForCheck();
+            result => {
+                if (result) {
+                    const request: GraphQLRequestModel = this.graphQLService.CutMedia(
+                        Number(this.currentStreamInTime),
+                        Number(this.currentStreamOutTime),
+                        this.currentProjectId,
+                        this.currentMediaPlay.mediaId);
+                    this.graphQLService.graphQLRequest(request)
+                        .pipe(takeUntil(this.ngUnsubscribe))
+                        .subscribe(
+                            (rsp: any) => {
+                                this.isProjectMediaLoading = true;
+                                this.getProjectMedias();
+                                this.currentStreamInTime = null;
+                                this.currentStreamOutTime = null;
+                                this.changeDetector.markForCheck();
+                            },
+                            error =>  {
+                                console.error('Error', error);
+                                this.toastService.addToast('Napaka', error.message);
+                                this.changeDetector.markForCheck();
+                            }
+                        );
                 }
-            );
+            }
+        );
     }
 
     publishSequence() {
