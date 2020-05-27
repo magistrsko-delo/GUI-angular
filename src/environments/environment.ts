@@ -4,10 +4,10 @@
 
 export const environment = {
     production: false,
-    graphql: 'http://40.114.191.104/graphql', // 'http://192.168.1.8:3000/graphql',
-    mediaManagerUrl: 'http://40.114.191.104/media-manager/', // 'http://192.168.1.8:8003/',
-    hlsStreamUrl: 'http://40.114.191.104/hls-stream/', // 'http://192.168.1.8:8006/',
-    projectUrl: 'http://40.114.191.104/project-metadata/' // 'http://192.168.1.8:8007/'
+    graphql: 'https://20.50.41.82/graphql', // 'http://192.168.1.8:3000/graphql',
+    mediaManagerUrl: 'https://20.50.41.82/media-manager/', // 'http://192.168.1.8:8003/',
+    hlsStreamUrl: 'https://20.50.41.82/hls-stream/', // 'http://192.168.1.8:8006/',
+    projectUrl: 'https://20.50.41.82/project-metadata/' // 'http://192.168.1.8:8007/'
 };
 
 /*
