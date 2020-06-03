@@ -75,6 +75,7 @@ export class ProjectListComponent extends MainComponent implements OnInit {
                         (rsp: any) => {
                             this.projectArray = rsp.deleteProject.map(project1 => new ProjectModel(project1));
                             console.error('DELETE FOR PROJECT CURRENTLY UNAVAILABLE');
+                            this.toastService.addToast('Napaka', 'BRISANJE PROJEKTA TRENUTNO NI MOGOČE :) :) ');
                             this.changeDetector.markForCheck();
                         },
                         error => {

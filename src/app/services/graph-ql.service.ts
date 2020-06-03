@@ -58,6 +58,7 @@ export class GraphQLService {
                 'awsStorageNameWholeMedia,' +
                 'createdAt,' +
                 'length,' +
+                'keywords' +
                 '}}'
         });
     }
@@ -76,6 +77,7 @@ export class GraphQLService {
                 'awsStorageNameWholeMedia,' +
                 'createdAt,' +
                 'length,' +
+                'keywords' +
                 '}}'
         });
     }

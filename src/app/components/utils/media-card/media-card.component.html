@@ -6,6 +6,7 @@
                 <mat-card-title>{{media.name}}</mat-card-title>
                 <mat-card-subtitle>id: {{media.mediaId}}, projectId: {{media.projectId}}, status: {{media.status}} </mat-card-subtitle>
                 <mat-card-subtitle>siteName: {{media.siteName}}</mat-card-subtitle>
+
             </div>
             <div fxFlex=""></div>
             <div *ngIf="!isSequenceMedia && media.status === 3" style="text-align: center">
@@ -20,5 +21,19 @@
                 </div>
             </div>
         </div>
+        <ng-container *ngIf="media.keywords && media.keywords.length > 0">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Ključne besede
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <span *ngFor="let keyword of media.keywords">
+                                {{ keyword }}
+                            </span>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </ng-container>
     </mat-card-content>
 </mat-card>
