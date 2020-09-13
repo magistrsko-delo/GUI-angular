@@ -6,6 +6,7 @@ import {map} from 'rxjs/operators';
 import {GraphQLRequestModel} from '../models/GraphQLRequest-model';
 import {ProjectModel} from '../models/ProjectModel';
 import {SequenceModel} from '../models/SequenceModels';
+import {MediaModel} from '../models/MediaModel';
 
 @Injectable({
     providedIn: 'root'
@@ -132,7 +133,8 @@ export class GraphQLService {
         });
     }
 
-    public MediaUpdateMutation(media: ProjectModel): GraphQLRequestModel {
+    public MediaUpdateMutation(media: MediaModel): GraphQLRequestModel {
+        delete media.keywords;
         return new GraphQLRequestModel({
             query: 'mutation ($mediaData: UpdateMedia!) { updateMedia(mediaData: $mediaData) { ' +
                 'mediaId,' +
