@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
-    graphql: 'https://51.116.109.32/graphql',
-    mediaManagerUrl: 'https://51.116.109.32/media-manager/',
-    hlsStreamUrl: 'https://51.116.109.32/hls-stream/',
-    projectUrl: 'https://51.116.109.32/project-metadata/'
+    graphql: 'https://20.54.183.57/graphql',
+    mediaManagerUrl: 'https://20.54.183.57/media-manager/',
+    hlsStreamUrl: 'https://20.54.183.57/hls-stream/',
+    projectUrl: 'https://20.54.183.57/project-metadata/'
 };
